@@ -1,0 +1,24 @@
+services:
+  traefik:
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--providers.file.directory=/etc/traefik"
+      - "--providers.file.watch=true"
+    volumes:
+      - type: bind
+        source: ./volumes/traefik/letsencrypt
+        target: /letsencrypt
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: ./config/traefik
+        target: /etc/traefik
+        read_only: true

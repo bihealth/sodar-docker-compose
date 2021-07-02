@@ -1,0 +1,221 @@
+version: "3.8"
+
+# Define default configuration for SODAR.
+x-sodar: &default-sodar
+  image: ghcr.io/bihealth/sodar-server:${SODAR_SERVER_VERSION}
+  environment: &default-sodar-environment
+    WAIT_HOSTS: "postgres:5432, redis:6379, irods:1247"
+    LC_ALL: en_US.UTF-8
+    DJANGO_ALLOWED_HOSTS: "*"
+    DJANGO_SECRET_KEY: ${SODAR_DJANGO_SECRET_KEY}
+    DJANGO_SETTINGS_MODULE: config.settings.production
+    CELERY_BROKER_URL: redis://redis:6379/0
+    CELERY_CHDIR: /usr/src/app
+    CELERY_CREATE_DIRS: "1"
+    DATABASE_URL: postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/sodar
+    CONN_MAX_AGE: "0"
+    SITE_INSTANCE_TITLE: ${SODAR_SITE_INSTANCE_TITLE}
+    SITE_SUBTITLE: ${SODAR_SITE_SUBTITLE}
+    PROJECTROLES_SEND_EMAIL: ${SODAR_EMAIL_ENABLED}
+    EMAIL_SENDER: ${SODAR_EMAIL_SENDER}
+    EMAIL_SUBJECT_PREFIX: ${SODAR_EMAIL_SUBJECT_PREFIX}
+    EMAIL_URL: ${SODAR_EMAIL_URL}
+    ENABLED_BACKEND_PLUGINS: ${ENABLED_BACKEND_PLUGINS}
+    PROJECTROLES_ADMIN_OWNER: ${SODAR_ADMIN_OWNER}
+    PROJECTROLES_DEFAULT_ADMIN: ${SODAR_ADMIN_DEFAULT_ADMIN}
+    PROJECTROLES_ALLOW_LOCAL_USERS: ${SODAR_ALLOW_LOCAL_USERS}
+    PROJECTROLES_ALLOW_ANONYMOUS: ${SODAR_ALLOW_ANONYMOUS}
+    PROJECTROLES_DISABLE_CDN_INCLUDES: "1"
+    PROJECTROLES_CUSTOM_JS_INCLUDES: /static/local/js/jquery-3.5.1.min.js,/static/local/js/bootstrap.bundle.min.js,/static/local/js/tether.js,/static/local/js/shepherd.min.js,/static/local/js/clipboard.min.js
+    PROJECTROLES_CUSTOM_CSS_INCLUDES: /static/local/css/bootstrap.min.css
+    CUSTOM_STATIC_DIR: /usr/src/app/local-static
+    ENABLE_LDAP: ${SODAR_LDAP_ENABLED}
+    AUTH_LDAP_SERVER_URI: ${SODAR_LDAP_SERVER_URI}
+    AUTH_LDAP_BIND_PASSWORD: ${SODAR_LDAP_BIND_PASSWORD}
+    AUTH_LDAP_BIND_DN: ${SODAR_LDAP_BIND_DN}
+    AUTH_LDAP_USER_SEARCH_BASE: ${SODAR_LDAP_USER_SEARCH_BASE}
+    AUTH_LDAP_USERNAME_DOMAIN: ${SODAR_LDAP_USERNAME_DOMAIN}
+    AUTH_LDAP_DOMAIN_PRINTABLE: ${SODAR_LDAP_DOMAIN_PRINTABLE}
+    ENABLE_LDAP: ${SODAR_LDAP2_ENABLED}
+    AUTH_LDAP2_SERVER_URI: ${SODAR_LDAP2_SERVER_URI}
+    AUTH_LDAP2_BIND_PASSWORD: ${SODAR_LDAP2_BIND_PASSWORD}
+    AUTH_LDAP2_BIND_DN: ${SODAR_LDAP2_BIND_DN}
+    AUTH_LDAP2_USER_SEARCH_BASE: ${SODAR_LDAP2_USER_SEARCH_BASE}
+    AUTH_LDAP2_USERNAME_DOMAIN: ${SODAR_LDAP2_USERNAME_DOMAIN}
+    AUTH_LDAP2_DOMAIN_PRINTABLE: ${SODAR_LDAP2_DOMAIN_PRINTABLE}
+    IRODS_ENV_PATH: /usr/src/app/staticfiles/irods/irods_server_env.json
+    IRODSINFO_ENV_PATH: /usr/src/app/staticfiles/irods/irods_client_env.json
+    ENABLE_IRODS: ${ENABLE_IRODS}
+    IRODS_HOST: irods
+    IRODS_ZONE: ${IRODS_ZONE_NAME}
+    IRODS_PORT: "1247"
+    IRODS_USER: ${IRODS_ADMIN_USERNAME}
+    IRODS_PASS: ${IRODS_ADMIN_PASSWORD}
+    IRODS_WEBDAV_ENABLED: ${SODAR_IRODS_WEBDAV_ENABLED}
+    IRODS_WEBDAV_URL: ${SODAR_IRODS_WEBDAV_URL}
+    TASKFLOW_BACKEND_HOST: http://sodar-taskflow
+    TASKFLOW_BACKEND_PORT: "5005"
+    TASKFLOW_SODAR_SECRET: ${SODAR_TASKFLOW_SECRET}
+  networks:
+    - sodar
+  restart: unless-stopped
+
+
+services:
+  traefik:
+    image: traefik:v2.3.1
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - sodar
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+    volumes:
+      - type: bind
+        source: ./volumes/traefik/letsencrypt
+        target: /letsencrypt
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+
+  sodar-web:
+    <<: *default-sodar
+    networks:
+      - sodar
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+      - sodar-taskflow
+      - irods
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.sodar-web.entrypoints=web,websecure"
+      - "traefik.http.routers.sodar-web.middlewares=xforward"
+      - "traefik.http.routers.sodar-web.rule=HostRegexp(`{catchall:.+}`)"
+      - "traefik.http.services.sodar-web.loadbalancer.server.port=8080"
+      - "traefik.http.routers.sodar-web.tls=true"
+
+  sodar-celerybeat:
+    <<: *default-sodar
+    command: ["celerybeat"]
+    networks:
+      - sodar
+    depends_on:
+      - sodar-web
+    restart: unless-stopped
+
+  sodar-celeryd-default:
+    <<: *default-sodar
+    command: ["celeryd"]
+    environment:
+      <<: *default-sodar-environment
+      CELERY_QUEUES: default
+      CELERY_WORKERS: 16
+    depends_on:
+      - sodar-web
+    networks:
+      - sodar
+    restart: unless-stopped
+
+  sodar-taskflow:
+    image: ghcr.io/bihealth/sodar-taskflow:${SODAR_TASKFLOW_VERSION}
+    environment:
+      SODAR_TASKFLOW_SETTINGS: /usr/src/app/config/production.py
+      TASKFLOW_IRODS_HOST: irods
+      TASKFLOW_IRODS_PORT: "1247"
+      TASKFLOW_IRODS_USER: ${IRODS_ADMIN_USERNAME}
+      TASKFLOW_IRODS_PASS: ${IRODS_ADMIN_PASSWORD}
+      TASKFLOW_IRODS_ALLOW_CLEANUP: 0
+      TASKFLOW_SODAR_URL: sodar-web:8080
+      TASKFLOW_REDIS_URL: redis://redis:6379/2"
+      TASKFLOW_SODAR_SECRET: ${SODAR_TASKFLOW_SECRET}
+    networks:
+      - sodar
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: sodar
+    networks:
+      - sodar
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./volumes/postgres/data
+        target: /var/lib/postgresql/data
+
+  redis:
+    image: redis:6
+    networks:
+      - sodar
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./volumes/redis/data
+        target: /data
+
+  # BEGIN: auth-sssd
+  #
+  # Uncomment and run container if you want SSSD configuration.
+  # sssd:
+  #   image: ghcr.io/bihealth/sssd-docker:${SSSD_VERSION}
+  #   restart: unless-stopped
+  #   networks:
+  #     - sodar
+  #   volumes:
+  #     - type: bind  # SSSD config, copied to /etc/sssd
+  #       source: ./config/sssd/sssd.conf
+  #       target: /etc/sssd.in/sssd.conf
+  #       read_only: true
+  #     - type: volume
+  #       source: sssd-sockets
+  #       target: /var/lib/sss
+  # END: auth-sssd
+
+  irods:
+    image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
+    hostname: irods  # iRODS really does not like the hash names
+    environment:
+      IRODS_HOST: irods
+      IRODS_ICAT_DBSERVER: ${POSTGRES_HOST}
+      IRODS_ICAT_DBUSER: ${POSTGRES_USERNAME}
+      IRODS_ICAT_DBPASS: ${POSTGRES_PASSWORD}
+      IRODS_ADMIN_USER: ${IRODS_ADMIN_USERNAME}
+      IRODS_ADMIN_PASS: ${IRODS_ADMIN_PASSWORD}
+    depends_on:
+      - postgres
+    networks:
+      - sodar
+    restart: unless-stopped
+    shm_size: '2gb'
+    volumes:
+      - type: bind  # configuration
+        source: ./config/irods/etc
+        target: /etc/irods
+      - type: bind  # log files
+        source: ./volumes/irods/log
+        target: /var/lib/irods/log
+      - type: bind  # mass data files
+        source: ./volumes/irods/vault
+        target: /var/lib/irods/Vault
+
+networks:
+  sodar:

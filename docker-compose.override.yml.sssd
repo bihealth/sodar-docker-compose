@@ -1,0 +1,36 @@
+services:
+  sssd:
+    image: ghcr.io/bihealth/sssd-docker:${SSSD_VERSION}
+    restart: unless-stopped
+    networks:
+      - sodar
+    volumes:
+      - type: bind  # SSSD config, copied to /etc/sssd
+        source: ./config/sssd/sssd.conf
+        target: /etc/sssd.in/sssd.conf
+        read_only: true
+      - type: volume
+        source: sssd-sockets
+        target: /var/lib/sss
+
+  irods:
+    image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}-sssd
+    depends_on:
+      - postgres
+      - sssd
+    volumes:
+      - type: bind  # configuration
+        source: ./config/irods/etc
+        target: /etc/irods
+      - type: bind  # log files
+        source: ./volumes/irods/log
+        target: /var/lib/irods/iRODS/server/log
+      - type: bind  # mass data files
+        source: ./volumes/irods/vault
+        target: /var/lib/irods/Vault
+      - type: volume
+        source: sssd-sockets
+        target: /var/lib/sss
+
+volumes:
+  sssd-sockets:

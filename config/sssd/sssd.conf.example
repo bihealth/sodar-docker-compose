@@ -1,0 +1,28 @@
+[sssd]
+services = nss, pam
+config_file_version = 2
+domains = DOMAIN
+
+[domain/CHARITE]
+ldap_uri = ldap://ldap.example.com
+ldap_search_base = DC=example,DC=com
+ldap_default_bind_dn = CN=ldap-bind,OU=Users,DC=example,DC=com
+ldap_default_authtok = ldap-bind-password
+
+# See configuration of SSSD on how to setup.
+access_provider = ldap
+auth_provider = ldap
+cache_credentials = true
+account_cache_expiration = 7
+entry_cache_timeout = 14400
+id_provider = ldap
+use_fully_qualified_names = True
+ldap_access_filter = objectClass=person
+ldap_tls_reqcert = allow
+ldap_schema = ad
+ldap_user_object_class = person
+ldap_user_name = sAMAccountName
+ldap_user_fullname = displayName
+ldap_id_mapping = True
+ldap_user_objectsid = objectSid
+debug_level = 1
