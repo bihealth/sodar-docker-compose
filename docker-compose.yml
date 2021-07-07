@@ -43,7 +43,7 @@ x-sodar: &default-sodar
     AUTH_LDAP2_USER_SEARCH_BASE: ${SODAR_AUTH_LDAP2_USER_SEARCH_BASE}
     AUTH_LDAP2_USERNAME_DOMAIN: ${SODAR_AUTH_LDAP2_USERNAME_DOMAIN}
     AUTH_LDAP2_DOMAIN_PRINTABLE: ${SODAR_AUTH_LDAP2_DOMAIN_PRINTABLE}
-    SODAR_LOG_FILE_PATH: /var/log/sodar.log
+    LOGGING_FILE_PATH: /var/log/sodar.log
     IRODS_ENV_PATH: /usr/src/app/staticfiles/irods/irods_server_env.json
     IRODSINFO_ENV_PATH: /usr/src/app/staticfiles/irods/irods_client_env.json
     ENABLE_IRODS: ${SODAR_ENABLE_IRODS}
