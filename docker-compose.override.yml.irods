@@ -1,0 +1,32 @@
+# docker-compose.override.yaml fragment for running irods from docker-compose
+# as well.
+
+services:
+  irods:
+    image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
+    hostname: irods  # iRODS really does not like the hash names
+    environment:
+      IRODS_HOST: irods
+      IRODS_ICAT_DBSERVER: ${POSTGRES_HOST}
+      IRODS_ICAT_DBUSER: ${POSTGRES_USERNAME}
+      IRODS_ICAT_DBPASS: ${POSTGRES_PASSWORD}
+      IRODS_ADMIN_USER: ${IRODS_ADMIN_USERNAME}
+      IRODS_ADMIN_PASS: ${IRODS_ADMIN_PASSWORD}
+    depends_on:
+      - postgres
+    networks:
+      - sodar
+    restart: unless-stopped
+    shm_size: '2gb'
+    volumes:
+      - type: bind  # configuration
+        source: ./config/irods/etc
+        target: /etc/irods
+      - type: bind  # log files
+        source: ./volumes/irods/log
+        target: /var/lib/irods/log
+      - type: bind  # mass data files
+        source: ./volumes/irods/vault
+        target: /var/lib/irods/Vault
+
+
