@@ -4,7 +4,7 @@ version: "3.8"
 x-sodar: &default-sodar
   image: ghcr.io/bihealth/sodar-server:${SODAR_SERVER_VERSION}
   environment: &default-sodar-environment
-    WAIT_HOSTS: "postgres:5432, redis:6379, irods:1247"
+    WAIT_HOSTS: "postgres:5432, redis:6379"
     LC_ALL: en_US.UTF-8
     DJANGO_ALLOWED_HOSTS: "*"
     DJANGO_SECRET_KEY: ${SODAR_DJANGO_SECRET_KEY}
