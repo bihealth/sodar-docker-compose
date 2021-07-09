@@ -2,6 +2,11 @@
 # as well.
 
 services:
+  sodar-web:
+    depends_on:
+      - postgres
+      - redis
+      - sodar-taskflow
   irods:
     image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
     hostname: irods  # iRODS really does not like the hash names
