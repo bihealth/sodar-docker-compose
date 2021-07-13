@@ -48,7 +48,7 @@ x-sodar: &default-sodar
     IRODSINFO_ENV_PATH: /usr/src/app/staticfiles/irods/irods_client_env.json
     ENABLE_IRODS: ${SODAR_ENABLE_IRODS}
     IRODS_HOST: ${IRODS_HOST}
-    IRODS_ZONE: ${IRODS_ZONE_NAME}
+    IRODS_ZONE: ${IRODS_ZONE}
     IRODS_PORT: "1247"
     IRODS_USER: ${IRODS_ADMIN_USERNAME}
     IRODS_PASS: ${IRODS_ADMIN_PASSWORD}
