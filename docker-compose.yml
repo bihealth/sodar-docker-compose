@@ -56,7 +56,7 @@ x-sodar: &default-sodar
     IRODS_WEBDAV_URL: ${SODAR_IRODS_WEBDAV_URL}
     TASKFLOW_BACKEND_HOST: http://sodar-taskflow
     TASKFLOW_BACKEND_PORT: "5005"
-    TASKFLOW_SODAR_SECRET: ${SODAR_TASKFLOW_SECRET}
+    TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
   networks:
     - sodar
   restart: unless-stopped
