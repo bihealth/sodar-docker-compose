@@ -48,10 +48,10 @@ x-sodar: &default-sodar
     IRODSINFO_ENV_PATH: /usr/src/app/staticfiles/irods/irods_client_env.json
     ENABLE_IRODS: ${SODAR_ENABLE_IRODS}
     IRODS_HOST: ${IRODS_HOST}
-    IRODS_ZONE: ${IRODS_ZONE}
-    IRODS_PORT: "1247"
+    IRODS_PORT: ${IRODS_PORT}
     IRODS_USER: ${IRODS_ADMIN_USERNAME}
     IRODS_PASS: ${IRODS_ADMIN_PASSWORD}
+    IRODS_ZONE: ${IRODS_ZONE}
     IRODS_WEBDAV_ENABLED: ${SODAR_IRODS_WEBDAV_ENABLED}
     IRODS_WEBDAV_URL: ${SODAR_IRODS_WEBDAV_URL}
     TASKFLOW_BACKEND_HOST: http://sodar-taskflow
@@ -131,14 +131,15 @@ services:
     image: ghcr.io/bihealth/sodar-taskflow:${SODAR_TASKFLOW_VERSION}
     environment:
       SODAR_TASKFLOW_SETTINGS: /usr/src/app/config/production.py
-      TASKFLOW_IRODS_HOST: irods
-      TASKFLOW_IRODS_PORT: "1247"
+      TASKFLOW_IRODS_HOST: ${IRODS_HOST}
+      TASKFLOW_IRODS_PORT: ${IRODS_PORT}
       TASKFLOW_IRODS_USER: ${IRODS_ADMIN_USERNAME}
       TASKFLOW_IRODS_PASS: ${IRODS_ADMIN_PASSWORD}
+      TASKFLOW_IRODS_ZONE: ${IRODS_ZONE}
       TASKFLOW_IRODS_ALLOW_CLEANUP: 0
       TASKFLOW_SODAR_URL: sodar-web:8080
       TASKFLOW_REDIS_URL: redis://redis:6379/2"
-      TASKFLOW_SODAR_SECRET: ${SODAR_TASKFLOW_SECRET}
+      TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
     networks:
       - sodar
     restart: unless-stopped
