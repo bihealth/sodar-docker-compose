@@ -157,6 +157,10 @@ services:
     depends_on:
       - postgres
       - redis
+    volumes:
+      - type: bind
+        source: ./config/sodar
+        target: /etc/sodar
 
   postgres:
     image: postgres:11
