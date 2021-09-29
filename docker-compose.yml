@@ -109,6 +109,10 @@ services:
       - "traefik.http.routers.sodar-web.rule=HostRegexp(`{catchall:.+}`)"
       - "traefik.http.services.sodar-web.loadbalancer.server.port=8080"
       - "traefik.http.routers.sodar-web.tls=true"
+    volumes:
+      - type: bind
+        source: ./config/sodar
+        target: /etc/sodar
 
   sodar-celerybeat:
     <<: *default-sodar
