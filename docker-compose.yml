@@ -151,6 +151,8 @@ services:
       TASKFLOW_REDIS_URL: redis://redis:6379/2
       TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
       TASKFLOW_LOG_PATH: /var/log/sodar-taskflow.log
+      TASKFLOW_LOG_LEVEL: ${TASKFLOW_LOG_LEVEL}
+      TASKFLOW_DEBUG: ${TASKFLOW_DEBUG}
     networks:
       - sodar
     restart: unless-stopped
