@@ -135,6 +135,10 @@ services:
     networks:
       - sodar
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./config/sodar
+        target: /etc/sodar
 
   sodar-taskflow:
     image: ghcr.io/bihealth/sodar-taskflow:${SODAR_TASKFLOW_VERSION}
