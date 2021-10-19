@@ -60,7 +60,7 @@ $ cp env.example .env
 $ $EDIT .env
 ```
 
-### 3. Bring up the site
+### 3. Bring up the Site
 
 You can now bring up the site with Docker Compose.
 The site will come up at your server and listen on ports 80 and 443 (make sure that the ports are open), you can access it at `https://<your-host>/` in your web browser.
@@ -88,6 +88,8 @@ $ docker ps
 In the case of any error please report it to us via the Issue Tracker of this repository or email to `cubi-helpdesk@bihealth.de`.
 Please include the full output as a text file attachment.
 
+### 4. Create Super User
+
 Create your first super user (call it `root` or adjust `env.sodar`).
 
 TODO: check
@@ -96,14 +98,12 @@ TODO: check
 $ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser
 ```
 
-### 4. Create
-
 ### 5. Use SODAR
 
-Visit the website at `https://<your-host>/` and login with the account `root` and password `changeme`.
+Visit the website at `https://<your-host>/` and login with the account `root` and password you provided for the ```createsuperuser``` comand.
 There will be a warning about self-signed certificates, see [TLS/SSL Certificates](#tlsssl-certificates) below on how to deal with this.
-You can change it in the `Django Admin` (available from the menu with the little user icon on the top right).
-You can also use the Django Administration interface to create new user records.
+You can change it in the `Django Admin` (available from the user menu on the top right corner of the UI).
+You can also use the Django Administration interface to create new user accounts.
 
 ## Anatomy of this Repository
 
@@ -156,7 +156,7 @@ This section section is only interesting for maintainers of `sodar-docker-compos
 
 Install the Github CLI ([see instructions](https://github.com/cli/cli#installation)), then login with `gh auth login`.
 
-### Creating a new Release
+### Creating a New Release
 
 Use `${sodar-server-version}-${build-version}` as the tag name for `sodar-docker-compose`.
 This allows people to easily track if something changed here but the `sodar-server` version is the same.

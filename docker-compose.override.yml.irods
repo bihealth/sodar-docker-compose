@@ -1,5 +1,6 @@
 # docker-compose.override.yaml fragment for running irods from docker-compose
 # as well.
+version: "3.8"
 
 services:
   sodar-web:
@@ -9,14 +10,25 @@ services:
       - sodar-taskflow
   irods:
     image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
+    ports:
+      - "1247:1247"
     hostname: irods  # iRODS really does not like the hash names
     environment:
-      IRODS_HOST: irods
+      IRODS_HOST_NAME: irods
       IRODS_ICAT_DBSERVER: ${POSTGRES_HOST}
       IRODS_ICAT_DBUSER: ${POSTGRES_USERNAME}
       IRODS_ICAT_DBPASS: ${POSTGRES_PASSWORD}
       IRODS_ADMIN_USER: ${IRODS_USER}
       IRODS_ADMIN_PASS: ${IRODS_PASS}
+      IRODS_ZONE_NAME: sodarZone
+      IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
+      IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
+      IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_NEGOTIATION}
+      IRODS_ZONE_KEY: ${IRODS_ZONE_KEY}
+      IRODS_NEGOTIATION_KEY: ${IRODS_NEGOTIATION_KEY}
+      IRODS_PASSWORD_SALT: ${IRODS_PASSWORD_SALT}
+      IRODS_CONTROL_PLANE_KEY: ${IRODS_CONTROL_PLANE_KEY}
+      IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
     depends_on:
       - postgres
     networks:
@@ -32,6 +44,4 @@ services:
         target: /var/lib/irods/log
       - type: bind  # mass data files
         source: ./volumes/irods/vault
-        target: /var/lib/irods/Vault
-
-
+        target: /data/Vault
