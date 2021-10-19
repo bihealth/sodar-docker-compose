@@ -158,6 +158,8 @@ services:
       TASKFLOW_LOG_PATH: /var/log/sodar-taskflow.log
       TASKFLOW_LOG_LEVEL: ${TASKFLOW_LOG_LEVEL}
       TASKFLOW_DEBUG: ${TASKFLOW_DEBUG}
+      TASKFLOW_IRODS_ENV_OVERRIDE: ${TASKFLOW_IRODS_ENV_OVERRIDE}
+      TASKFLOW_IRODS_CERT_PATH: ${TASKFLOW_IRODS_CERT_PATH}
     networks:
       - sodar
     restart: unless-stopped
