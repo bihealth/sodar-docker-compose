@@ -1,0 +1,26 @@
+# docker-compose.override.yaml fragment for running davrods from docker-compose
+version: "3.8"
+
+services:
+  davrods:
+    image: ghcr.io/bihealth/davrods-docker:${DAVRODS_VERSION}
+    ports:
+      - "8008:80"
+    hostname: davrods
+    environment:
+      IRODS_HOST_NAME: irods
+      IRODS_ZONE_PORT: 1247
+      IRODS_ZONE_NAME: sodarZone
+      IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
+      IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
+      IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
+      IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_POLICY}
+      IRODS_SSL_CA_CERT_PATH: ${IRODS_CERT_PATH}
+      DAVRODS_ENABLE_TICKETS: ${DAVRODS_ENABLE_TICKETS}
+      DAVRODS_AUTH_NAME: ${DAVRODS_AUTH_NAME}
+    depends_on:
+      - sodar-web
+    networks:
+      - sodar
+    restart: unless-stopped
+    shm_size: '2gb'
