@@ -24,3 +24,7 @@ services:
       - sodar
     restart: unless-stopped
     shm_size: '2gb'
+    volumes:
+      - type: bind
+        source: ./config/davrods/theme
+        target: /etc/httpd/irods/theme
