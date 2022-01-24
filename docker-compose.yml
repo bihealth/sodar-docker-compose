@@ -12,6 +12,8 @@ x-sodar: &default-sodar
     CELERY_BROKER_URL: redis://redis:6379/0
     CELERY_CHDIR: /usr/src/app
     CELERY_CREATE_DIRS: "1"
+    DEBUG: "1"
+    DJANGO_DEBUG: "1"
     DATABASE_URL: postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/sodar
     CONN_MAX_AGE: "0"
     LOGGING_LEVEL: ${SODAR_LOGGING_LEVEL}
@@ -107,7 +109,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.sodar-web.entrypoints=web,websecure"
+      - "traefik.http.routers.sodar-web.entrypoints=websecure"
       - "traefik.http.routers.sodar-web.middlewares=xforward"
       - "traefik.http.routers.sodar-web.rule=HostRegexp(`{catchall:.+}`)"
       - "traefik.http.services.sodar-web.loadbalancer.server.port=8080"

@@ -19,7 +19,7 @@ services:
       DAVRODS_ENABLE_TICKETS: ${DAVRODS_ENABLE_TICKETS}
       DAVRODS_AUTH_NAME: ${DAVRODS_AUTH_NAME}
     depends_on:
-      - sodar-web
+      - irods
     networks:
       - sodar
     restart: unless-stopped

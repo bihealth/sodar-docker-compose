@@ -1,6 +1,7 @@
 # The environment file.
 .env
 docker-compose.override.yml
+/config/sodar
 
 # The downloaded volumes
 /volumes/
