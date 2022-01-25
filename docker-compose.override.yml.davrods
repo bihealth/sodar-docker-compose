@@ -4,8 +4,6 @@ version: "3.8"
 services:
   davrods:
     image: ghcr.io/bihealth/davrods-docker:${DAVRODS_VERSION}
-    ports:
-      - "8008:80"
     hostname: davrods
     environment:
       IRODS_HOST_NAME: irods
@@ -28,3 +26,12 @@ services:
       - type: bind
         source: ./config/davrods/theme
         target: /etc/httpd/irods/theme
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.davrods.entrypoints=websecure"
+      - "traefik.http.routers.davrods.middlewares=xforward"
+      - "traefik.http.routers.davrods.rule=(HostRegexp(`{catchall:.+}`) && PathPrefix(`/sodarZone`))"
+      - "traefik.http.services.davrods.loadbalancer.server.port=80"
+      - "traefik.http.routers.davrods.tls=true"
+      - "traefik.http.routers.davrods.priority=100"
