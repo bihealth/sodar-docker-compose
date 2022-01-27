@@ -33,6 +33,8 @@ services:
       IRODS_SSL_DH_PARAMS_FILE: ${IRODS_SSL_DH_PARAMS_FILE}
       IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
       IRODS_DEFAULT_HASH_SCHEME: MD5
+      IRODS_SSSD_AUTH: 0
+      IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
     depends_on:
       - postgres
     networks:
