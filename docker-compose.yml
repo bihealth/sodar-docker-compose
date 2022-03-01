@@ -67,6 +67,8 @@ x-sodar: &default-sodar
     TASKFLOW_BACKEND_HOST: http://sodar-taskflow
     TASKFLOW_BACKEND_PORT: "5005"
     TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
+    ENABLE_SENTRY: ${SODAR_ENABLE_SENTRY}
+    SENTRY_DSN: ${SODAR_SENTRY_DSN}
   networks:
     - sodar
   restart: unless-stopped
