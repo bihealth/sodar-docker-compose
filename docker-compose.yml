@@ -26,7 +26,6 @@ x-sodar: &default-sodar
     SODAR_API_DEFAULT_HOST: ${SODAR_API_DEFAULT_HOST}
     PROJECTROLES_EMAIL_HEADER: ${SODAR_PROJECTROLES_EMAIL_HEADER}
     PROJECTROLES_EMAIL_FOOTER: ${SODAR_PROJECTROLES_EMAIL_FOOTER}
-    PROJECTROLES_ADMIN_OWNER: ${SODAR_PROJECTROLES_ADMIN_OWNER}
     PROJECTROLES_DEFAULT_ADMIN: ${SODAR_PROJECTROLES_DEFAULT_ADMIN}
     PROJECTROLES_ALLOW_LOCAL_USERS: ${SODAR_PROJECTROLES_ALLOW_LOCAL_USERS}
     PROJECTROLES_ALLOW_ANONYMOUS: ${SODAR_PROJECTROLES_ALLOW_ANONYMOUS}
@@ -64,11 +63,14 @@ x-sodar: &default-sodar
     IRODS_WEBDAV_URL_ANON: ${SODAR_IRODS_WEBDAV_URL_ANON}
     IRODS_WEBDAV_USER_ANON: ${SODAR_IRODS_WEBDAV_USER_ANON}
     IRODS_WEBDAV_IGV_PROXY: ${SODAR_IRODS_WEBDAV_IGV_PROXY}
+    IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
+    BASICAUTH_REALM: ${SODAR_BASICAUTH_REALM}
     TASKFLOW_BACKEND_HOST: http://sodar-taskflow
     TASKFLOW_BACKEND_PORT: "5005"
     TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
     ENABLE_SENTRY: ${SODAR_ENABLE_SENTRY}
     SENTRY_DSN: ${SODAR_SENTRY_DSN}
+
   networks:
     - sodar
   restart: unless-stopped
@@ -120,6 +122,9 @@ services:
       - type: bind
         source: ./config/sodar
         target: /etc/sodar
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
 
   sodar-celerybeat:
     <<: *default-sodar
@@ -176,6 +181,9 @@ services:
       - type: bind
         source: ./config/sodar
         target: /etc/sodar
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
 
   postgres:
     image: postgres:11

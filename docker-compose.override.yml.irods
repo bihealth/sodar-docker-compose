@@ -35,6 +35,7 @@ services:
       IRODS_DEFAULT_HASH_SCHEME: MD5
       IRODS_SSSD_AUTH: 0
       IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
+      IRODS_SODAR_API_HOST: ${IRODS_SODAR_API_HOST}
     depends_on:
       - postgres
     networks:
@@ -42,9 +43,12 @@ services:
     restart: unless-stopped
     shm_size: '2gb'
     volumes:
-      - type: bind  # configuration
+      - type: bind  # iRODS configuration
         source: ./config/irods/etc
         target: /etc/irods
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
       - type: bind  # log files
         source: ./volumes/irods/log
         target: /var/lib/irods/log

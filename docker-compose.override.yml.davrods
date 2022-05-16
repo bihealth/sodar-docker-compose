@@ -26,6 +26,9 @@ services:
       - type: bind
         source: ./config/davrods/theme
         target: /etc/httpd/irods/theme
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"

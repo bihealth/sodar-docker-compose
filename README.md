@@ -1,7 +1,8 @@
 # Run SODAR Server using Docker Compose
 
-Detailed documentation can be found in the "Administrator's Manual" section of the [SODAR Server Manual](https://sodar-server.readthedocs.io/en/latest/).
-You can get started in four (actually three) easy steps (given that you fulfill the requirements from below).
+This repository provides a Docker Compose network with all the components needed for running [SODAR](https://github.org/bihealth/sodar-server) (System for Omics Data Access and Retrieval).
+
+Detailed documentation regarding configuring and deploying the system can be found in the "SODAR Administraion" section of the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/admin_overview.html).
 
 > - :interrobang: Questions? Need Help?
 >   SODAR is academic software but we are happy to provide support on a best-effort manner.
@@ -10,100 +11,124 @@ You can get started in four (actually three) easy steps (given that you fulfill 
 >   Feel free to contact us via cubi-helpdesk@bihealth.de in the case that you want to use SODAR beyond an evaluation.
 >   We will try to assist you in your setup on a best-effort manner.
 
+
 ## Prerequisites
 
-- Hardware:
-    - Memory: 64 GB of RAM
-    - CPU: 16 cores
-    - Disk: 600+ GB of free and **fast** disk space
-        - about ~500 GB for initial database (on compression enabled ZFS it will consume only 167GB)
-        - on installation: ~100 GB for data package file
-        - per exome: ~200MB
-        - a few (~5) GB for the Docker images
-- Operating System:
-    - a modern Linux that is [supported by Docker](https://docs.docker.com/engine/install/#server)
-    - outgoing HTTPS connections to the internet are allowed to download data and Docker images
-    - server ports 80 and 443 are open and free on the host that run on this on
-- Software:
+- Hardware
+    - ~10 GB of disk space for the Docker images
+- Operating System
+    - A modern Linux distribution that is [supported by Docker](https://docs.docker.com/engine/install/#server)
+    - Outgoing HTTPS connections to the internet are allowed to download data and Docker images
+    - Server ports 80 and 443 are open and free on the host
+- Software
     - [Docker](https://docs.docker.com/get-docker/)
     - [Docker Compose](https://docs.docker.com/compose/install/)
+    - [OpenSSL](https://www.openssl.org/)
+
 
 ## Quickstart
 
-See the "Administrator's Manual" section of the [SODAR Server Manual](https://sodar-server.readthedocs.io/en/latest/) for more details.
-
-Optionally, fork this repository as a first step so you can track changes that you make using Git.
+This section provides quickstart introductions to test or evaluate the SODAR system on your Linux workstation.
 
 ### 1. Get Scripts and Configuration
 
-Clone this repository (or your clone) with the Docker Compose file.
+First, clone this repository.
 
 ```bash
 $ git clone https://github.com/bihealth/sodar-docker-compose.git
 $ cd sodar-docker-compose
 ```
 
-### 2. Initialize Volumes and Adjust Configuration
+Alternatively, fork the repository as a first step so you can track changes that you make using Git.
+
+### 2. Update /etc/hosts
+
+Edit the `/etc/hosts` file and add the following line:
+
+```bash
+$ sudo vi /etc/hosts
+
+127.0.0.1 sodar.local
+```
+
+This is needed as certain SODAR features require a fully qualified domain name for the host.
+
+### 3. Initialize Volumes and Set the Environment
 
 Use the provided `init.sh` script for creating the required volumes (directories).
 
 ```bash
 $ bash init.sh
 $ ls volumes/
-postgres  irods
+irods  postgres  redis  traefik
 ```
 
-Then copy the example configuration to `.env` and adjust it.
+Next, copy the example environment file `env.example` to `.env`.
 
 ```bash
 $ cp env.example .env
-$ $EDIT .env
 ```
 
-### 3. Bring up the Site
+For the default evaluation setup, no edits to the environment are required Later, you can edit this file to configure your SODAR installation.
 
-You can now bring up the site with Docker Compose.
-The site will come up at your server and listen on ports 80 and 443 (make sure that the ports are open), you can access it at `https://<your-host>/` in your web browser.
-This will create a lot of output and will not return you to your shell.
-You can stop the servers with `Ctrl-C`.
+### 4. Provide Certificate and DH Parameters
+
+To enable all SODAR features, HTTPS connections are required. For evaluation you can use self-signed certificates. For instructions on how to generate certificates with OpenSSL in Ubuntu, see [here](https://ubuntu.com/server/docs/security-certificates). If using a different Linux distribution, consult the relevant documentation.
+
+Once you have generated the required `.crt` and `.key` files, copy them into `config/traefik/tls`.
 
 ```bash
-$ docker-compose up
+$ cp yourcert.crt /{your-path}/sodar-docker-compose/config/traefik/tls/server.crt
+$ cp yourcert.key /{your-path}/sodar-docker-compose/config/traefik/tls/server.key
 ```
 
-You can also use let Docker Compose run the containers in the background:
+iRODS also excepts a `dhparams.pem` file for Diffie-Hellman key exchange. For basic evaluation of SODAR this step is not critical, as the file being missing will only result in error messages in the iRODS server log as it falls back to built-in values. For longer use of SODAR, generating your own file is recommended.
+
+You can generate the file using OpenSSL as demonstrated below. This will take some time.
 
 ```bash
-$ docker-compose up -d
-## XXX TODO XXX ##
+$ openssl dhparam -2 -out dhparams.pem 2048
 ```
 
-You can check that everything is running:
+Afterwards, copy the file under the iRODS configuration path.
 
 ```bash
-$ docker ps
-## XXX TODO XXX ##
+$ cp dhparams.pem /{your-path}/sodar-docker-compose/config/irods/etc/
 ```
 
-In the case of any error please report it to us via the Issue Tracker of this repository or email to `cubi-helpdesk@bihealth.de`.
-Please include the full output as a text file attachment.
+### 5. Bring Up the System
 
-### 4. Create Super User
+You can now bring up the system with Docker Compose.
 
-Create your first super user (call it `root` or adjust `env.sodar`).
-
-TODO: check
+The provided `run.sh` script runs all the necessary overrides for a full SODAR
+system running in the Docker network. It will create a lot of output and will not return to your shell. You can stop the servers with `Ctrl-C`.
 
 ```bash
-$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser
+$ ./run.sh
 ```
 
-### 5. Use SODAR
+In the case of any error please report it to us via the Issue Tracker of this repository or email to `cubi-helpdesk@bihealth.de`. Please include the full output as a text file attachment.
 
-Visit the website at `https://<your-host>/` and login with the account `root` and password you provided for the ```createsuperuser``` comand.
-There will be a warning about self-signed certificates, see [TLS/SSL Certificates](#tlsssl-certificates) below on how to deal with this.
-You can change it in the `Django Admin` (available from the user menu on the top right corner of the UI).
-You can also use the Django Administration interface to create new user accounts.
+### 6. Create Superuser Account
+
+To gain access to the SODAR web UI, you must first create a superuser account. The user name should be given as `root`, otherwise you will need to edit the `.env` file. Open a new terminal tab, enter the following and follow the prompt:
+
+```bash
+$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser --skip-checks --username root
+```
+
+### 7. Use SODAR
+
+You can now navigate to the SODAR website at `https://sodar.local/` on your web browser. Please note that SODAR officially supports the Mozilla Firefox and Google Chrome browsers.
+
+The browser will warn you about self-signed certificates and you will need to allow access according to the browser's instructions.
+
+Once the site has loaded, login with the account `root` and the password you provided in the previous step.
+
+Typically, the first step when logging to a newly installed SODAR site is to create a top level category under which projects are added. You can also add additional users in the Django Admin, which is available from the user dropdown in the top right corner of the UI.
+
+For further instruction on using SODAR, please consul the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/).
+
 
 ## Anatomy of this Repository
 
@@ -140,12 +165,12 @@ The setup uses [traefik](https://traefik.io/) as a reverse proxy and must be rec
   By default (and as a fallback), traefik will use self-signed certificates that are recreated at every startup.
   These are probably fine for a test environment but you might want to change this to one of the below.
 - `settings:production-provide-certificate` --
-  You can provide your own certificates by placing them into ``config/traefik/tls/server.crt` and `server.key`.
+  You can provide your own certificates by placing them into `config/traefik/tls/server.crt` and `server.key`.
   Make sure to provide the full certificate chain if needed (e.g., for DFN issued certificates).
 - `settings:production-letsencrypt` --
   If your site is reachable from the internet then you can also use `settings:production-letsencrypt` which will use [letsencrypt](https://letsencrypt.org/) to obtain the certificates.
   NB: if you make your site reachable from the internet then you should be aware of the implications.
-  sodar is MIT licensed software which means that it comes "without any warranty of any kind", see the `LICENSE` file for details.
+  SODAR is MIT licensed software which means that it comes "without any warranty of any kind". See the `LICENSE` file for details.
 
 After changing the configuration, restart the site (e.g., with `docker-compose down && docker-compose up -d` if it is runnin in detached mode).
 

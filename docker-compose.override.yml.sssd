@@ -46,9 +46,12 @@ services:
     networks:
       - sodar
     volumes:
-      - type: bind  # configuration
+      - type: bind  # iRODS configuration
         source: ./config/irods/etc
         target: /etc/irods
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
       - type: bind  # log files
         source: ./volumes/irods/log
         target: /var/lib/irods/iRODS/server/log
