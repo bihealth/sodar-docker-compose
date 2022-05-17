@@ -78,22 +78,16 @@ To enable all SODAR features, HTTPS connections are required. For evaluation you
 Once you have generated the required `.crt` and `.key` files, copy them into `config/traefik/tls`.
 
 ```bash
-$ cp yourcert.crt /{your-path}/sodar-docker-compose/config/traefik/tls/server.crt
-$ cp yourcert.key /{your-path}/sodar-docker-compose/config/traefik/tls/server.key
+$ cp yourcert.crt config/traefik/tls/server.crt
+$ cp yourcert.key config/traefik/tls/server.key
 ```
 
-iRODS also excepts a `dhparams.pem` file for Diffie-Hellman key exchange. For basic evaluation of SODAR this step is not critical, as the file being missing will only result in error messages in the iRODS server log as it falls back to built-in values. For longer use of SODAR, generating your own file is recommended.
+iRODS also excepts a `dhparams.pem` file for Diffie-Hellman key exchange. For basic evaluation of SODAR this step is not critical, as the file being missing will only result in error messages in the iRODS server log as it falls back to built-in values. For production use of SODAR, generating your own file is strongly recommended.
 
 You can generate the file using OpenSSL as demonstrated below. This will take some time.
 
 ```bash
-$ openssl dhparam -2 -out dhparams.pem 2048
-```
-
-Afterwards, copy the file under the iRODS configuration path.
-
-```bash
-$ cp dhparams.pem /{your-path}/sodar-docker-compose/config/irods/etc/
+$ openssl dhparam -2 -out config/irods/etc/dhparams.pem 2048
 ```
 
 ### 5. Bring Up the System
@@ -125,7 +119,7 @@ The browser will warn you about self-signed certificates and you will need to al
 
 Once the site has loaded, login with the account `root` and the password you provided in the previous step.
 
-Typically, the first step when logging to a newly installed SODAR site is to create a top level category under which projects are added. You can also add additional users in the Django Admin, which is available from the user dropdown in the top right corner of the UI.
+Typically, the first step when logging to a newly installed SODAR site is to create a top level category under which projects can be added. You can also add additional users in the Django Admin, which is available from the user dropdown in the top right corner of the UI.
 
 For further instruction on using SODAR, please consul the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/).
 
@@ -156,24 +150,6 @@ $ tree
 ├── README.md
 └── init.sh
 ```
-
-### TLS/SSL Certificates
-
-The setup uses [traefik](https://traefik.io/) as a reverse proxy and must be reconfigured if you want to change the default behaviour of using self-signed certificates.
-
-- `settings:testing` --
-  By default (and as a fallback), traefik will use self-signed certificates that are recreated at every startup.
-  These are probably fine for a test environment but you might want to change this to one of the below.
-- `settings:production-provide-certificate` --
-  You can provide your own certificates by placing them into `config/traefik/tls/server.crt` and `server.key`.
-  Make sure to provide the full certificate chain if needed (e.g., for DFN issued certificates).
-- `settings:production-letsencrypt` --
-  If your site is reachable from the internet then you can also use `settings:production-letsencrypt` which will use [letsencrypt](https://letsencrypt.org/) to obtain the certificates.
-  NB: if you make your site reachable from the internet then you should be aware of the implications.
-  SODAR is MIT licensed software which means that it comes "without any warranty of any kind". See the `LICENSE` file for details.
-
-After changing the configuration, restart the site (e.g., with `docker-compose down && docker-compose up -d` if it is runnin in detached mode).
-
 
 ## Maintainer Info
 
