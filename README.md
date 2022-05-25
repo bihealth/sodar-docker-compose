@@ -2,7 +2,7 @@
 
 This repository provides a Docker Compose network with all the components needed for running [SODAR](https://github.org/bihealth/sodar-server) (System for Omics Data Access and Retrieval).
 
-Detailed documentation regarding configuring and deploying the system can be found in the "SODAR Administraion" section of the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/admin_overview.html).
+Detailed documentation regarding configuring and deploying the system can be found in the "SODAR Administraion" section of the [SODAR manual](https://sodar-server.readthedocs.io/en/latest/admin_overview.html).
 
 > - :interrobang: Questions? Need Help?
 >   SODAR is academic software but we are happy to provide support on a best-effort manner.
@@ -26,7 +26,7 @@ Detailed documentation regarding configuring and deploying the system can be fou
     - [OpenSSL](https://www.openssl.org/)
 
 
-## Quickstart
+## Quickstart for Evaluation
 
 This section provides quickstart introductions to test or evaluate the SODAR system on your Linux workstation.
 
@@ -105,10 +105,10 @@ In the case of any error please report it to us via the Issue Tracker of this re
 
 ### 6. Create Superuser Account
 
-To gain access to the SODAR web UI, you must first create a superuser account. The user name should be given as `root`, otherwise you will need to edit the `.env` file. Open a new terminal tab, enter the following and follow the prompt:
+To gain access to the SODAR web UI, you must first create a superuser account. The user name should be given as `admin`, otherwise you will need to edit the `.env` file. Open a new terminal tab, enter the following and follow the prompt:
 
 ```bash
-$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser --skip-checks --username root
+$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
 ```
 
 ### 7. Use SODAR
@@ -117,39 +117,29 @@ You can now navigate to the SODAR website at `https://sodar.local/` on your web 
 
 The browser will warn you about self-signed certificates and you will need to allow access according to the browser's instructions.
 
-Once the site has loaded, login with the account `root` and the password you provided in the previous step.
+Once the site has loaded, login with the account `admin` and the password you provided in the previous step.
 
 Typically, the first step when logging to a newly installed SODAR site is to create a top level category under which projects can be added. You can also add additional users in the Django Admin, which is available from the user dropdown in the top right corner of the UI.
 
 For further instruction on using SODAR, please consul the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/).
 
 
-## Anatomy of this Repository
+## Run in Development
 
-- The file `init.sh` performs some initialization to be done before starting the containers.
-- The file `docker-compose.yml` contains the definition of the services required to run SODAR Server.
-- The `config` directory contains files that are used for configuration:
-    - `config/traefik/certificates.toml` -- configuration for SSL/TLS setup
-        - `/etc/traefik/tls/server.crt` and `server.key` -- place the SSL certificate and unencrypted private key here for custom SSL certificates
-        - in the case of certificates from DFN (used by many German academic organizations), you will have to provide the full chain to the "Telekom" certificate in `server.crt`.
+This repository can also be used to run external SODAR components when developing the main `sodar-server` project.
 
-```bash
-$ tree
-.
-├── config
-│   ├── exomiser
-│   │   └── application.properties
-│   ├── postgres
-│   │   └── postgresql.conf.orig
-│   └── traefik
-│       ├── certificates.toml
-│       └── ssl
-│           └── PLACE_TLS_FILES_HERE
-├── docker-compose.yml
-├── LICENSE
-├── README.md
-└── init.sh
-```
+In this case, the SODAR server itself, consisting of `sodar-web`, `sodar-celeryd-default` and `sodar-celerybeat` will be run locally on the development workstation, while the databases, iRODS, Davrods and SODAR Taskflow are run in the Docker Compose network.
+
+For full instructions on how to set up the dev environment, see the development section in the [SODAR manual](https://sodar-server.readthedocs.io/en/latest/).
+
+Instructions in brief:
+
+1. Clone this repository in a new directory, e.g. `sodar-docker-compose-dev`
+2. Run `./init.sh`
+3. Provide your self-signed certificate and DH params as instructed in the quickstart section
+4. Copy `env.example.dev` into `.env`
+5. Run `./run_dev.sh`
+6. Configure and run the required SODAR server components locally on your workstation
 
 ## Maintainer Info
 

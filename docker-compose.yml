@@ -1,6 +1,7 @@
+# Production / evaluation configuration for SODAR
 version: "3.8"
 
-# Define default configuration for SODAR.
+# Default configuration for SODAR
 x-sodar: &default-sodar
   image: ghcr.io/bihealth/sodar-server:${SODAR_SERVER_VERSION}
   environment: &default-sodar-environment
@@ -101,6 +102,30 @@ services:
         target: /var/run/docker.sock
         read_only: true
 
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: sodar
+    networks:
+      - sodar
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./volumes/postgres/data
+        target: /var/lib/postgresql/data
+
+  redis:
+    image: redis:6
+    networks:
+      - sodar
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./volumes/redis/data
+        target: /data
+
   sodar-web:
     <<: *default-sodar
     networks:
@@ -184,30 +209,6 @@ services:
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
-
-  postgres:
-    image: postgres:11
-    environment:
-      POSTGRES_USER: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: sodar
-    networks:
-      - sodar
-    restart: unless-stopped
-    volumes:
-      - type: bind
-        source: ./volumes/postgres/data
-        target: /var/lib/postgresql/data
-
-  redis:
-    image: redis:6
-    networks:
-      - sodar
-    restart: unless-stopped
-    volumes:
-      - type: bind
-        source: ./volumes/redis/data
-        target: /data
 
 networks:
   sodar:

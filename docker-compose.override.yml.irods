@@ -12,7 +12,7 @@ services:
     image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
     ports:
       - "1247:1247"
-    hostname: irods  # iRODS really does not like the hash names
+    hostname: irods
     environment:
       IRODS_HOST_NAME: irods
       IRODS_ICAT_DBSERVER: ${POSTGRES_HOST}
@@ -49,9 +49,9 @@ services:
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
-      - type: bind  # log files
+      - type: bind  # Log files
         source: ./volumes/irods/log
         target: /var/lib/irods/log
-      - type: bind  # mass data files
+      - type: bind  # File storage
         source: ./volumes/irods/vault
         target: /data/Vault

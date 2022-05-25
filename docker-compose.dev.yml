@@ -1,0 +1,212 @@
+# Development configuration for SODAR (external components ONLY)
+version: "3.8"
+
+# Default configuration for iRODS
+x-irods: &default-irods
+  image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
+  environment: &default-irods-environment
+    IRODS_ICAT_DBSERVER: ${POSTGRES_HOST}
+    IRODS_ICAT_DBUSER: ${POSTGRES_USERNAME}
+    IRODS_ICAT_DBPASS: ${POSTGRES_PASSWORD}
+    IRODS_ADMIN_USER: ${IRODS_USER}
+    IRODS_ADMIN_PASS: ${IRODS_PASS}
+    IRODS_ZONE_NAME: sodarZone
+    IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
+    IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
+    IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_POLICY}
+    IRODS_ZONE_KEY: ${IRODS_ZONE_KEY}
+    IRODS_NEGOTIATION_KEY: ${IRODS_NEGOTIATION_KEY}
+    IRODS_PASSWORD_SALT: ${IRODS_PASSWORD_SALT}
+    IRODS_CONTROL_PLANE_KEY: ${IRODS_CONTROL_PLANE_KEY}
+    IRODS_SSL_CERTIFICATE_CHAIN_FILE: ${IRODS_SSL_CERTIFICATE_CHAIN_FILE}
+    IRODS_SSL_CERTIFICATE_KEY_FILE: ${IRODS_SSL_CERTIFICATE_KEY_FILE}
+    IRODS_SSL_DH_PARAMS_FILE: ${IRODS_SSL_DH_PARAMS_FILE}
+    IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
+    IRODS_DEFAULT_HASH_SCHEME: MD5
+    IRODS_SSSD_AUTH: 0
+    IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
+    IRODS_SODAR_API_HOST: ${IRODS_SODAR_API_HOST}
+  depends_on:
+    - postgres
+  restart: unless-stopped
+  shm_size: '2gb'
+
+services:
+  traefik:
+    image: traefik:v2.3.1
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - sodar
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+    volumes:
+      - type: bind
+        source: ./volumes/traefik/letsencrypt
+        target: /letsencrypt
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: sodar
+    ports:
+      - "5432:5432"
+    networks:
+      - sodar
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./volumes/postgres/data
+        target: /var/lib/postgresql/data
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    networks:
+      - sodar
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./volumes/redis/data
+        target: /data
+
+  sodar-taskflow:
+    image: ghcr.io/bihealth/sodar-taskflow:${SODAR_TASKFLOW_VERSION}
+    environment:
+      SODAR_TASKFLOW_SETTINGS: /usr/src/app/config/production.py
+      TASKFLOW_IRODS_HOST: ${IRODS_HOST}
+      TASKFLOW_IRODS_PORT: ${IRODS_PORT}
+      TASKFLOW_IRODS_USER: ${IRODS_USER}
+      TASKFLOW_IRODS_PASS: ${IRODS_PASS}
+      TASKFLOW_IRODS_ZONE: ${IRODS_ZONE}
+      TASKFLOW_IRODS_ROOT_PATH: ${IRODS_ROOT_PATH}
+      TASKFLOW_IRODS_ALLOW_CLEANUP: 1
+      TASKFLOW_SODAR_URL: http://host.docker.internal:8000
+      TASKFLOW_REDIS_URL: redis://redis:6379/2
+      TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
+      TASKFLOW_LOG_PATH: /var/log/sodar-taskflow.log
+      TASKFLOW_LOG_LEVEL: ${TASKFLOW_LOG_LEVEL}
+      TASKFLOW_DEBUG: ${TASKFLOW_DEBUG}
+      TASKFLOW_IRODS_ENV_OVERRIDE: ${TASKFLOW_IRODS_ENV_OVERRIDE}
+      TASKFLOW_IRODS_CERT_PATH: ${TASKFLOW_IRODS_CERT_PATH}
+      TASKFLOW_IRODS_TEST_HOST: irods-test
+      TASKFLOW_IRODS_TEST_PORT: 1247
+    ports:
+      - "5005:5005"
+    networks:
+      - sodar
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+    depends_on:
+      - redis
+    volumes:
+      - type: bind
+        source: ./config/sodar
+        target: /etc/sodar
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
+
+  irods:
+    <<: *default-irods
+    environment:
+      <<: *default-irods-environment
+      IRODS_HOST_NAME: irods
+    ports:
+      - "1247:1247"
+    hostname: irods
+    networks:
+      - sodar
+    extra_hosts:
+     - host.docker.internal:host-gateway
+    volumes:
+      - type: bind  # iRODS configuration
+        source: ./config/irods/etc
+        target: /etc/irods
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
+      - type: bind  # Log files
+        source: ./volumes/irods/log
+        target: /var/lib/irods/log
+      - type: bind  # File storage
+        source: ./volumes/irods/vault
+        target: /data/Vault
+
+  irods-test:
+    <<: *default-irods
+    environment:
+      <<: *default-irods-environment
+      IRODS_HOST_NAME: irods-test
+      IRODS_ICAT_DBNAME: ICAT_TEST
+    ports:
+      - "4488:1247"
+    hostname: irods-test
+    networks:
+      - sodar
+    volumes:
+      - type: bind  # iRODS configuration
+        source: ./config/irods/etc-test
+        target: /etc/irods
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
+      - type: bind  # File storage
+        source: ./volumes/irods/vault-test
+        target: /data/Vault
+
+  davrods:
+    image: ghcr.io/bihealth/davrods-docker:${DAVRODS_VERSION}
+    hostname: davrods
+    environment:
+      IRODS_HOST_NAME: irods
+      IRODS_ZONE_PORT: 1247
+      IRODS_ZONE_NAME: sodarZone
+      IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
+      IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
+      IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
+      IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_POLICY}
+      IRODS_SSL_CA_CERT_PATH: ${IRODS_CERT_PATH}
+      DAVRODS_ENABLE_TICKETS: ${DAVRODS_ENABLE_TICKETS}
+      DAVRODS_AUTH_NAME: ${DAVRODS_AUTH_NAME}
+    depends_on:
+      - irods
+    networks:
+      - sodar
+    restart: unless-stopped
+    shm_size: '2gb'
+    volumes:
+      - type: bind
+        source: ./config/davrods/theme
+        target: /etc/httpd/irods/theme
+      - type: bind  # Traefik configuration for shared certs
+        source: ./config/traefik/tls
+        target: /etc/traefik/tls
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.davrods.entrypoints=websecure"
+      - "traefik.http.routers.davrods.middlewares=xforward"
+      - "traefik.http.routers.davrods.rule=(HostRegexp(`{catchall:.+}`) && PathPrefix(`/sodarZone`))"
+      - "traefik.http.services.davrods.loadbalancer.server.port=80"
+      - "traefik.http.routers.davrods.tls=true"
+      - "traefik.http.routers.davrods.priority=100"
+
+networks:
+  sodar:
