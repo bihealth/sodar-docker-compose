@@ -7,7 +7,7 @@ Detailed documentation regarding configuring and deploying the system can be fou
 > - :interrobang: Questions? Need Help?
 >   SODAR is academic software but we are happy to provide support on a best-effort manner.
 >   Use the [issue tracker](https://github.com/bihealth/sodar-docker-compose/issues) or send an email to cubi-helpdesk@bihealth.de in case of any problems.
-> - :factory: Bringing SODAR into "production"?
+> - :factory: Bringing SODAR into production?
 >   Feel free to contact us via cubi-helpdesk@bihealth.de in the case that you want to use SODAR beyond an evaluation.
 >   We will try to assist you in your setup on a best-effort manner.
 
@@ -141,6 +141,21 @@ Instructions in brief:
 5. Run `./run_dev.sh`
 6. Configure and run the required SODAR server components locally on your workstation
 
+## Troubleshooting
+
+Solutions for common problems with running the environment are detailed in this subsection.
+
+### Conflicts with Existing Database Servers
+
+If you are already running Postgres, Redis or iRODS on your workstation in their default ports, these servers will fail
+to run in the Docker Compose network. To fix this you should either:
+
+- Temporarily shut down your existing server
+- Or, alter the forwarded ports and your environment file to connect to separate ports
+- Or, remove the servers from the Docker Compose network and use your existing development servers.
+
+**NOTE:** You should never use an existing iRODS server as the "test" iRODS server, as the server zone and users will get wiped out after each SODAR test!
+
 ## Maintainer Info
 
 This section section is only interesting for maintainers of `sodar-docker-compose`.
@@ -152,6 +167,6 @@ Install the Github CLI ([see instructions](https://github.com/cli/cli#installati
 Use `${sodar-server-version}-${build-version}` as the tag name for `sodar-docker-compose`.
 This allows people to easily track if something changed here but the `sodar-server` version is the same.
 
-1. Create a new entry in `HISTORY.md` and commit.
+1. Create a new entry in `CHANGELOG.md` and commit.
 2. Create a new tag: `make tag TAG=vxx`.
 3. Push the tag and release: `make release`.
