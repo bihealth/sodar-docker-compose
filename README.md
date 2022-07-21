@@ -1,8 +1,8 @@
 # Run SODAR Server using Docker Compose
 
-This repository provides a Docker Compose network with all the components needed for running [SODAR](https://github.org/bihealth/sodar-server) (System for Omics Data Access and Retrieval).
+This repository provides a Docker Compose network with all the components needed for running [SODAR](https://github.com/bihealth/sodar-server) (System for Omics Data Access and Retrieval).
 
-Detailed documentation regarding configuring and deploying the system can be found in the "SODAR Administraion" section of the [SODAR manual](https://sodar-server.readthedocs.io/en/latest/admin_overview.html).
+Detailed documentation regarding configuring and deploying the system can be found in the "SODAR Administration" section of the [SODAR manual](https://sodar-server.readthedocs.io/en/latest/admin_overview.html).
 
 > - :interrobang: Questions? Need Help?
 >   SODAR is academic software but we are happy to provide support on a best-effort manner.
@@ -121,7 +121,7 @@ Once the site has loaded, login with the account `admin` and the password you pr
 
 Typically, the first step when logging to a newly installed SODAR site is to create a top level category under which projects can be added. You can also add additional users in the Django Admin, which is available from the user dropdown in the top right corner of the UI.
 
-For further instruction on using SODAR, please consul the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/).
+For further instruction on using SODAR, please consult the [SODAR Manual](https://sodar-server.readthedocs.io/en/latest/).
 
 
 ## Run in Development
@@ -141,6 +141,7 @@ Instructions in brief:
 5. Run `./run_dev.sh`
 6. Configure and run the required SODAR server components locally on your workstation
 
+
 ## Troubleshooting
 
 Solutions for common problems with running the environment are detailed in this subsection.
@@ -155,6 +156,7 @@ to run in the Docker Compose network. To fix this you should either:
 - Or, remove the servers from the Docker Compose network and use your existing development servers.
 
 **NOTE:** You should never use an existing iRODS server as the "test" iRODS server, as the server zone and users will get wiped out after each SODAR test!
+
 
 ## Maintainer Info
 
