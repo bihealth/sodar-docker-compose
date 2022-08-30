@@ -128,7 +128,7 @@ For further instruction on using SODAR, please consult the [SODAR Manual](https:
 
 This repository can also be used to run external SODAR components when developing the main `sodar-server` project.
 
-In this case, the SODAR server itself, consisting of `sodar-web`, `sodar-celeryd-default` and `sodar-celerybeat` will be run locally on the development workstation, while the databases, iRODS, Davrods and SODAR Taskflow are run in the Docker Compose network.
+In this case, the SODAR server itself, consisting of `sodar-web`, `sodar-celeryd-default` and `sodar-celerybeat` will be run locally on the development workstation, while the databases, iRODS and Davrods are run in the Docker Compose network.
 
 For full instructions on how to set up the dev environment, see the development section in the [SODAR manual](https://sodar-server.readthedocs.io/en/latest/).
 

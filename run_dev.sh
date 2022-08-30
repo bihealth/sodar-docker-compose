@@ -4,4 +4,5 @@
 # You can also use the .sssd override if you need to develop with LDAP.
 docker-compose -f docker-compose.dev.yml \
     -f docker-compose.override.yml.provided-cert \
-    up
+    up \
+    --remove-orphans

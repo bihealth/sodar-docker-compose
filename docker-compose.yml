@@ -66,9 +66,8 @@ x-sodar: &default-sodar
     IRODS_WEBDAV_IGV_PROXY: ${SODAR_IRODS_WEBDAV_IGV_PROXY}
     IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
     BASICAUTH_REALM: ${SODAR_BASICAUTH_REALM}
-    TASKFLOW_BACKEND_HOST: http://sodar-taskflow
-    TASKFLOW_BACKEND_PORT: "5005"
-    TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
+    TASKFLOW_LOCK_RETRY_COUNT: ${TASKFLOW_LOCK_RETRY_COUNT}
+    TASKFLOW_LOCK_RETRY_INTERVAL: ${TASKFLOW_LOCK_RETRY_INTERVAL}
     ENABLE_SENTRY: ${SODAR_ENABLE_SENTRY}
     SENTRY_DSN: ${SODAR_SENTRY_DSN}
 
@@ -134,7 +133,6 @@ services:
     depends_on:
       - postgres
       - redis
-      - sodar-taskflow
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
@@ -176,39 +174,6 @@ services:
       - type: bind
         source: ./config/sodar
         target: /etc/sodar
-
-  sodar-taskflow:
-    image: ghcr.io/bihealth/sodar-taskflow:${SODAR_TASKFLOW_VERSION}
-    environment:
-      SODAR_TASKFLOW_SETTINGS: /usr/src/app/config/production.py
-      TASKFLOW_IRODS_HOST: ${IRODS_HOST}
-      TASKFLOW_IRODS_PORT: ${IRODS_PORT}
-      TASKFLOW_IRODS_USER: ${IRODS_USER}
-      TASKFLOW_IRODS_PASS: ${IRODS_PASS}
-      TASKFLOW_IRODS_ZONE: ${IRODS_ZONE}
-      TASKFLOW_IRODS_ROOT_PATH: ${IRODS_ROOT_PATH}
-      TASKFLOW_IRODS_ALLOW_CLEANUP: 0
-      TASKFLOW_SODAR_URL: http://sodar-web:8080
-      TASKFLOW_REDIS_URL: redis://redis:6379/2
-      TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
-      TASKFLOW_LOG_PATH: /var/log/sodar-taskflow.log
-      TASKFLOW_LOG_LEVEL: ${TASKFLOW_LOG_LEVEL}
-      TASKFLOW_DEBUG: ${TASKFLOW_DEBUG}
-      TASKFLOW_IRODS_ENV_OVERRIDE: ${TASKFLOW_IRODS_ENV_OVERRIDE}
-      TASKFLOW_IRODS_CERT_PATH: ${TASKFLOW_IRODS_CERT_PATH}
-    networks:
-      - sodar
-    restart: unless-stopped
-    depends_on:
-      - postgres
-      - redis
-    volumes:
-      - type: bind
-        source: ./config/sodar
-        target: /etc/sodar
-      - type: bind  # Traefik configuration for shared certs
-        source: ./config/traefik/tls
-        target: /etc/traefik/tls
 
 networks:
   sodar:

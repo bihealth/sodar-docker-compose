@@ -85,44 +85,6 @@ services:
         source: ./volumes/redis/data
         target: /data
 
-  sodar-taskflow:
-    image: ghcr.io/bihealth/sodar-taskflow:${SODAR_TASKFLOW_VERSION}
-    environment:
-      SODAR_TASKFLOW_SETTINGS: /usr/src/app/config/production.py
-      TASKFLOW_IRODS_HOST: ${IRODS_HOST}
-      TASKFLOW_IRODS_PORT: ${IRODS_PORT}
-      TASKFLOW_IRODS_USER: ${IRODS_USER}
-      TASKFLOW_IRODS_PASS: ${IRODS_PASS}
-      TASKFLOW_IRODS_ZONE: ${IRODS_ZONE}
-      TASKFLOW_IRODS_ROOT_PATH: ${IRODS_ROOT_PATH}
-      TASKFLOW_IRODS_ALLOW_CLEANUP: 1
-      TASKFLOW_SODAR_URL: http://host.docker.internal:8000
-      TASKFLOW_REDIS_URL: redis://redis:6379/2
-      TASKFLOW_SODAR_SECRET: ${TASKFLOW_SODAR_SECRET}
-      TASKFLOW_LOG_PATH: /var/log/sodar-taskflow.log
-      TASKFLOW_LOG_LEVEL: ${TASKFLOW_LOG_LEVEL}
-      TASKFLOW_DEBUG: ${TASKFLOW_DEBUG}
-      TASKFLOW_IRODS_ENV_OVERRIDE: ${TASKFLOW_IRODS_ENV_OVERRIDE}
-      TASKFLOW_IRODS_CERT_PATH: ${TASKFLOW_IRODS_CERT_PATH}
-      TASKFLOW_IRODS_TEST_HOST: irods-test
-      TASKFLOW_IRODS_TEST_PORT: 1247
-    ports:
-      - "5005:5005"
-    networks:
-      - sodar
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    restart: unless-stopped
-    depends_on:
-      - redis
-    volumes:
-      - type: bind
-        source: ./config/sodar
-        target: /etc/sodar
-      - type: bind  # Traefik configuration for shared certs
-        source: ./config/traefik/tls
-        target: /etc/traefik/tls
-
   irods:
     <<: *default-irods
     environment:
