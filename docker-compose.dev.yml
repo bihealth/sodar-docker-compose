@@ -172,3 +172,5 @@ services:
 
 networks:
   sodar:
+    driver_opts:
+      com.docker.network.bridge.name: sodar-bridge-dev

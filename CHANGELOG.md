@@ -6,6 +6,7 @@
 - Remove dedicated SODAR Taskflow image (#24)
 - Update Taskflow-related environment variables (#24)
 - Fix duplicate lines in lets-encrypt override (#21)
+- Set bridge network name manually (#26)
 
 ## v0.11.3-1 (2020-08-30)
 
