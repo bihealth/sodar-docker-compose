@@ -7,6 +7,7 @@
 - Update Taskflow-related environment variables (#24)
 - Fix duplicate lines in lets-encrypt override (#21)
 - Set bridge network name manually (#26)
+- Add SODAR config directories to volumes (#18)
 
 ## v0.11.3-1 (2020-08-30)
 

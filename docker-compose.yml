@@ -142,9 +142,12 @@ services:
       - "traefik.http.services.sodar-web.loadbalancer.server.port=8080"
       - "traefik.http.routers.sodar-web.tls=true"
     volumes:
-      - type: bind
-        source: ./config/sodar
-        target: /etc/sodar
+      - type: bind  # Template include dir
+        source: ./config/sodar/templates
+        target: /usr/src/app/sodar/templates/include
+      - type: bind  # Samplesheets config dir
+        source: ./config/sodar/samplesheets
+        target: /usr/src/app/samplesheets/config
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls

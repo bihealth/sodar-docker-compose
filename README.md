@@ -60,7 +60,7 @@ Use the provided `init.sh` script for creating the required volumes (directories
 ```bash
 $ bash init.sh
 $ ls volumes/
-irods  postgres  redis  traefik
+irods  postgres  redis  sodar   traefik
 ```
 
 Next, copy the example environment file `env.example` to `.env`.
