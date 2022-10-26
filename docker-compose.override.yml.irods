@@ -7,7 +7,6 @@ services:
     depends_on:
       - postgres
       - redis
-      - sodar-taskflow
   irods:
     image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}
     ports:
