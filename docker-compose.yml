@@ -13,6 +13,7 @@ x-sodar: &default-sodar
     CELERY_BROKER_URL: redis://redis:6379/0
     CELERY_CHDIR: /usr/src/app
     CELERY_CREATE_DIRS: "1"
+    REDIS_URL: redis://redis:6379/0
     DATABASE_URL: postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/sodar
     CONN_MAX_AGE: "0"
     LOGGING_LEVEL: ${SODAR_LOGGING_LEVEL}
