@@ -1,5 +1,9 @@
 # SODAR Docker Compose Changelog
 
+## v0.12.1-1 (2022-11-10)
+
+- Release for SODAR v0.12.1
+
 ## v0.12.0-2 (2022-10-28)
 
 - Add missing `REDIS_URL` env var (#30)
