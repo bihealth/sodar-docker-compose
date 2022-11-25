@@ -1,5 +1,9 @@
 # SODAR Docker Compose Changelog
 
+## Unreleased
+
+- Increase `shm_size` on postgres (#33)
+
 ## v0.12.1-1 (2022-11-10)
 
 - Release for SODAR v0.12.1
