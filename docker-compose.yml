@@ -104,7 +104,7 @@ services:
 
   postgres:
     image: postgres:11
-    shm_size: 2gb
+    shm_size: 512mb
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
