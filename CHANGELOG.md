@@ -5,6 +5,7 @@
 - Release for SODAR v0.13.0
 - Increase `shm_size` on postgres (#33)
 - Add `SODAR_LDAP_ALT_DOMAINS` env var (#35)
+- Add `SODAR_SHEETS_IGV_OMIT_*` env vars (#36)
 
 ## v0.12.1-1 (2022-11-10)
 
