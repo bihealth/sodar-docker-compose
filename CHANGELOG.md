@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## v0.13.1-1 (2023-03-31)
+
+- Release for SODAR v0.13.1
+- Add `SODAR_LANDINGZONES_DISABLE_FOR_USERS` env var (#37)
+
 ## v0.13.0-1 (2023-02-08)
 
 - Release for SODAR v0.13.0
