@@ -1,5 +1,9 @@
 # SODAR Docker Compose Changelog
 
+## v0.13.2-1 (2023-04-18)
+
+- Release for SODAR v0.13.2
+
 ## v0.13.1-1 (2023-03-31)
 
 - Release for SODAR v0.13.1
