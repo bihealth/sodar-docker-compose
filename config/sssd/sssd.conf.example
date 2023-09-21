@@ -5,6 +5,16 @@ domains = DOMAIN
 
 [domain/CHARITE]
 ldap_uri = ldap://ldap.example.com
+#
+# To use a CA certificate:
+# - Change ./config/ldap/ldap_ca_cert.pem as needed
+# - Uncomment the next line
+#
+#ldap_tls_cacert = /etc/ssl/certs/ldap_ca_cert.pem
+#
+# Add if you need it:
+#
+#ldap_id_use_start_tls = True
 ldap_search_base = DC=example,DC=com
 ldap_default_bind_dn = CN=ldap-bind,OU=Users,DC=example,DC=com
 ldap_default_authtok = ldap-bind-password
