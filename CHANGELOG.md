@@ -1,5 +1,12 @@
 # SODAR Docker Compose Changelog
 
+## v0.14.0-1 (2023-09-27)
+
+- Add TLS and support and user filter support in LDAP settings
+- Add LDAP CA cert support
+- Add `SODAR_ADMINS` env var (#41)
+
+
 ## v0.13.3-1 (2023-05-10)
 
 - Release for SODAR v0.13.3
