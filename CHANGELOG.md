@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## Unreleased
+
+- Add `NETWORK_BRIDGE_NAME` env var (#46)
+
+
 ## v0.14.0-1 (2023-09-27)
 
 - Add TLS and support and user filter support in LDAP settings
