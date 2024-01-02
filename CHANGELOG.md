@@ -1,6 +1,6 @@
 # SODAR Docker Compose Changelog
 
-## Unreleased
+## v0.14.1-1 (2024-01-02)
 
 - Add `NETWORK_BRIDGE_NAME` env var (#46)
 - Add `SODAR_LDAP_DEBUG` env var (#50)
