@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add `NETWORK_BRIDGE_NAME` env var (#46)
+- Add `SODAR_LDAP_DEBUG` env var (#50)
 
 
 ## v0.14.0-1 (2023-09-27)
