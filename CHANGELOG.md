@@ -2,6 +2,8 @@
 
 ## v0.14.1-1 (2024-01-02)
 
+- Fix SSSD override LDAP cert binding (#44)
+- Update `docker compose` command in scripts (#45)
 - Add `NETWORK_BRIDGE_NAME` env var (#46)
 - Add `SODAR_LDAP_DEBUG` env var (#50)
 - Replace dummy LDAP cert with `.gitignore` file (#51)
