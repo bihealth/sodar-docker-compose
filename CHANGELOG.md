@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## v0.14.2-1 (2024-03-15)
+
+- Add `TASKFLOW_IRODS_CONN_TIMEOUT` env var (#53)
+
+
 ## v0.14.1-1 (2024-01-02)
 
 - Fix SSSD override LDAP cert binding (#44)
