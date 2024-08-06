@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## v0.15.0-1 (WIP)
+
+- Add `SODAR_ISATEMPLATES_ENABLE_CUBI_TEMPLATES` env var (#54)
+- Add `isatemplates_backend` to `ENABLED_BACKEND_PLUGINS` in `env.example` (#54)
+
 ## v0.14.2-1 (2024-03-15)
 
 - Add `TASKFLOW_IRODS_CONN_TIMEOUT` env var (#53)
