@@ -63,6 +63,8 @@ $ ls volumes/
 irods  postgres  redis  sodar   traefik
 ```
 
+You might need to change the user id in `init.sh` if you are running this on a multi-user system.
+
 Next, copy the example environment file `env.example` to `.env`.
 
 ```bash
@@ -108,7 +110,7 @@ In the case of any error please report it to us via the Issue Tracker of this re
 To gain access to the SODAR web UI, you must first create a superuser account. The user name should be given as `admin`, otherwise you will need to edit the `.env` file. Open a new terminal tab, enter the following and follow the prompt:
 
 ```bash
-$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
+$ docker exec -it sodar-docker-compose-sodar-web-1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
 ```
 
 ### 7. Use SODAR
