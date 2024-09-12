@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## v0.15.1-1 (2024-09-12)
+
+- Release for SODAR v0.15.1
+
+
 ## v0.15.0-1 (2024-08-08)
 
 - Add `SODAR_ISATEMPLATES_ENABLE_CUBI_TEMPLATES` env var (#54)
