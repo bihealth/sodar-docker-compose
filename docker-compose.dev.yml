@@ -58,7 +58,7 @@ services:
         read_only: true
 
   postgres:
-    image: postgres:11
+    image: postgres:16
     shm_size: 512mb
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
