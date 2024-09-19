@@ -64,6 +64,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: sodar
+    command: ["postgres", "-c", "log_min_messages=error"]
     ports:
       - "5432:5432"
     networks:
@@ -107,7 +108,7 @@ services:
         target: /etc/traefik/tls
       - type: bind  # Log files
         source: ./volumes/irods/log
-        target: /var/lib/irods/log
+        target: /var/log/irods
       - type: bind  # File storage
         source: ./volumes/irods/vault
         target: /data/Vault

@@ -53,7 +53,7 @@ services:
         target: /etc/traefik/tls
       - type: bind  # Log files
         source: ./volumes/irods/log
-        target: /var/lib/irods/log
+        target: /var/log/irods
       - type: bind  # File storage
         source: ./volumes/irods/vault
         target: /data/Vault

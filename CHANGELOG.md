@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## Unreleased
+
+- Suppress iRODS postgres transaction warnings (#17)
+- Upgrade to Postgres v16 (#34)
+
 ## v0.15.1-1 (2024-09-12)
 
 - Release for SODAR v0.15.1
