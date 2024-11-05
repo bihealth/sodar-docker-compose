@@ -58,12 +58,13 @@ services:
         read_only: true
 
   postgres:
-    image: postgres:11
+    image: postgres:16
     shm_size: 512mb
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: sodar
+    command: ["postgres", "-c", "log_min_messages=error"]
     ports:
       - "5432:5432"
     networks:
@@ -107,7 +108,7 @@ services:
         target: /etc/traefik/tls
       - type: bind  # Log files
         source: ./volumes/irods/log
-        target: /var/lib/irods/log
+        target: /var/log/irods
       - type: bind  # File storage
         source: ./volumes/irods/vault
         target: /data/Vault
@@ -142,7 +143,7 @@ services:
       IRODS_ZONE_PORT: 1247
       IRODS_ZONE_NAME: sodarZone
       IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
-      IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
+      IRODS_AUTHENTICATION_SCHEME: PAM  # ${IRODS_AUTHENTICATION_SCHEME} # TODO: Update Davrods to 4.3
       IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
       IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_POLICY}
       IRODS_SSL_CA_CERT_PATH: ${IRODS_CERT_PATH}

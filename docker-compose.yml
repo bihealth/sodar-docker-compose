@@ -117,12 +117,13 @@ services:
         read_only: true
 
   postgres:
-    image: postgres:11
+    image: postgres:16
     shm_size: 512mb
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: sodar
+    command: ["postgres", "-c", "log_min_messages=error"]
     networks:
       - sodar
     restart: unless-stopped
