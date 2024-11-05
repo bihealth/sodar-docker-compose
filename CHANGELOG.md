@@ -7,6 +7,7 @@
 - Upgrade to `irods-docker` v4.3.3-wip (#34)
 - Add `run_dev_sssd.sh` script (#65)
 - Add `offline_credentials_expiration` to example SSSD config (#64)
+- Add SODAR v1.0 env vars (#59)
 
 ## v0.15.1-1 (2024-09-12)
 
