@@ -176,9 +176,9 @@ services:
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
-      - type: bind  # LDAP CA certificate
-        source: ./config/ldap/ldap_ca_cert.pem
-        target: /etc/ssl/certs/ldap_ca_cert.pem
+      - type: bind  # LDAP CA certificates
+        source: ./config/ldap
+        target: /etc/ssl/certs
 
   sodar-celerybeat:
     <<: *default-sodar

@@ -142,9 +142,20 @@ Instructions in brief:
 6. Configure and run the required SODAR server components locally on your workstation
 
 
-## Troubleshooting
+## Optional Configuration
 
-Solutions for common problems with running the environment are detailed in this subsection.
+## LDAP TLS Certificates
+
+If an LDAP server used for authentication uses TLS and its CA is not public, you need to provide a CA certificate file.
+
+This can be done as follows:
+
+1. Copy the CA certificate file into `config/ldap/your-cert-file.pem`
+2. Set `SODAR_AUTH_LDAP*_CA_CERT_FILE` to `/etc/ssl/certs/your-cert-file.pem` (make sure to set the value for the correct LDAP server)
+3. Ensure you have also set `SODAR_AUTH_LDAP*_START_TLS=1` on the relevant LDAP server
+
+
+## Troubleshooting
 
 ### Conflicts with Existing Database Servers
 

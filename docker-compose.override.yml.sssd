@@ -14,9 +14,9 @@ services:
       - type: volume
         source: sssd-sockets
         target: /var/lib/sss
-      - type: bind  # LDAP CA certificate
-        source: ./config/ldap/ldap_ca_cert.pem
-        target: /etc/ssl/certs/ldap_ca_cert.pem
+      - type: bind  # LDAP CA certificates
+        source: ./config/ldap
+        target: /etc/ssl/certs
   irods:
     image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}-sssd
     ports:

@@ -8,6 +8,9 @@
 - Add `run_dev_sssd.sh` script (#65)
 - Add `offline_credentials_expiration` to example SSSD config (#64)
 - Add SODAR v1.0 env vars (#59)
+- Mount LDAP TLS config as directory instead of single file (#49)
+- Add LDAP TLS instructions to README (#58)
+
 
 ## v0.15.1-1 (2024-09-12)
 
