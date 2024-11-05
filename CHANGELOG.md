@@ -4,7 +4,8 @@
 
 - Suppress iRODS postgres transaction warnings (#17)
 - Upgrade to Postgres v16 (#34)
-- Upgrade to ``irods-docker`` v4.3.3-wip (#34)
+- Upgrade to `irods-docker` v4.3.3-wip (#34)
+- Add `run_dev_sssd.sh` script (#65)
 
 ## v0.15.1-1 (2024-09-12)
 
