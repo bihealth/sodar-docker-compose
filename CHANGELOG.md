@@ -10,6 +10,7 @@
 - Add SODAR v1.0 env vars (#59)
 - Mount LDAP TLS config as directory instead of single file (#49)
 - Add LDAP TLS instructions to README (#58)
+- Add `IRODS_PASSWORD_MIN_TIME` env var (#66)
 
 
 ## v0.15.1-1 (2024-09-12)
