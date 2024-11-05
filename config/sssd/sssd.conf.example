@@ -3,6 +3,9 @@ services = nss, pam
 config_file_version = 2
 domains = DOMAIN
 
+[pam]
+offline_credentials_expiration = 3
+
 [domain/CHARITE]
 ldap_uri = ldap://ldap.example.com
 #

@@ -6,6 +6,7 @@
 - Upgrade to Postgres v16 (#34)
 - Upgrade to `irods-docker` v4.3.3-wip (#34)
 - Add `run_dev_sssd.sh` script (#65)
+- Add `offline_credentials_expiration` to example SSSD config (#64)
 
 ## v0.15.1-1 (2024-09-12)
 
