@@ -1,5 +1,4 @@
 # docker-compose.override.yaml fragment for running davrods from docker-compose
-version: "3.8"
 
 services:
   davrods:

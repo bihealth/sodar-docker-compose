@@ -1,5 +1,4 @@
 # Development configuration for SODAR (external components ONLY)
-version: "3.8"
 
 # Default configuration for iRODS
 x-irods: &default-irods

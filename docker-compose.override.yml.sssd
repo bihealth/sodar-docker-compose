@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   sssd:
     image: ghcr.io/bihealth/sssd-docker:${SSSD_VERSION}

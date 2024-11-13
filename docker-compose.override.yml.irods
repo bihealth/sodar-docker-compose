@@ -1,6 +1,4 @@
 # docker-compose.override.yaml fragment for running irods from docker-compose
-# as well.
-version: "3.8"
 
 services:
   sodar-web:
@@ -46,9 +44,6 @@ services:
       - type: bind  # iRODS configuration
         source: ./config/irods/etc
         target: /etc/irods
-      - type: bind  # iRODS version.json file
-        source: ./config/irods-lib/version.json
-        target: /var/lib/irods/version.json
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls

@@ -1,5 +1,4 @@
 # Production / evaluation configuration for SODAR
-version: "3.8"
 
 # Default configuration for SODAR
 x-sodar: &default-sodar
