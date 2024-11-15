@@ -108,7 +108,7 @@ In the case of any error please report it to us via the Issue Tracker of this re
 To gain access to the SODAR web UI, you must first create a superuser account. The user name should be given as `admin`, otherwise you will need to edit the `.env` file. Open a new terminal tab, enter the following and follow the prompt:
 
 ```bash
-$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
+$ docker exec -it sodar-docker-compose-sodar-web-1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
 ```
 
 ### 7. Use SODAR
@@ -144,7 +144,7 @@ Instructions in brief:
 
 ## Optional Configuration
 
-## LDAP TLS Certificates
+### LDAP TLS Certificates
 
 If an LDAP server used for authentication uses TLS and its CA is not public, you need to provide a CA certificate file.
 
@@ -153,6 +153,18 @@ This can be done as follows:
 1. Copy the CA certificate file into `config/ldap/your-cert-file.pem`
 2. Set `SODAR_AUTH_LDAP*_CA_CERT_FILE` to `/etc/ssl/certs/your-cert-file.pem` (make sure to set the value for the correct LDAP server)
 3. Ensure you have also set `SODAR_AUTH_LDAP*_START_TLS=1` on the relevant LDAP server
+
+### iRODS Ticket URL Support
+
+For enabling anonymous ticket URLs for SODAR, create the `anonymous` user in iRODS with the following commands:
+
+```bash
+$ docker exec -it sodar-docker-compose-dev-43-fresh-irods-1 /bin/bash -i
+$ su - irods
+$ iadmin mkuser anonymous rodsuser
+```
+
+Make sure to also set `DAVRODS_ENABLE_TICKETS=1` in your environment.
 
 
 ## Troubleshooting
