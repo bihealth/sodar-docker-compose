@@ -5,6 +5,7 @@
 - Suppress iRODS postgres transaction warnings (#17)
 - Upgrade to Postgres v16 (#34)
 - Upgrade to `irods-docker` v4.3.3-wip (#34)
+- Upgrade to `davrods-docker` v4.3.3_1.5.1-wip (#63)
 - Add `run_dev_sssd.sh` script (#65)
 - Add `offline_credentials_expiration` to example SSSD config (#64)
 - Add SODAR v1.0 env vars (#59)
