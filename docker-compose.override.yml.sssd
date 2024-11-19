@@ -41,6 +41,7 @@ services:
       IRODS_SSL_DH_PARAMS_FILE: ${IRODS_SSL_DH_PARAMS_FILE}
       IRODS_SSSD_AUTH: 1
       IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
+      IRODS_PASSWORD_MIN_TIME: ${IRODS_PASSWORD_MIN_TIME}
     depends_on:
       - postgres
       - sssd
