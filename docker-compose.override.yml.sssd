@@ -54,9 +54,9 @@ services:
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
-      - type: bind  # log files
+      - type: bind  # Log files
         source: ./volumes/irods/log
-        target: /var/lib/irods/iRODS/server/log
+        target: /var/log/irods
       - type: bind  # mass data files
         source: ./volumes/irods/vault
         target: /data/Vault
