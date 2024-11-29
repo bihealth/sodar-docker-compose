@@ -171,15 +171,18 @@ Make sure to also set `DAVRODS_ENABLE_TICKETS=1` in your environment.
 
 ### Conflicts with Existing Database Servers
 
-If you are already running Postgres, Redis or iRODS on your workstation in their default ports, these servers will fail
-to run in the Docker Compose network. To fix this you should either:
+If run the network on your workstation and are already runing Postgres, Redis or iRODS in their default ports, these servers will fail to run in the Docker Compose network. To fix this you should either:
 
-- Temporarily shut down your existing server
-- Or, alter the forwarded ports and your environment file to connect to separate ports
-- Or, remove the servers from the Docker Compose network and use your existing development servers.
+- Temporarily shut down your existing server, or
+- Alter the forwarded ports and your environment file to connect to separate ports, or
+- Remove the servers from the Docker Compose network and use your existing development servers.
 
 **NOTE:** You should never use an existing iRODS server as the "test" iRODS server, as the server zone and users will get wiped out after each SODAR test!
 
+### SSSD Timeouts with an AD Server
+
+If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
+the login process considerably.
 
 ## Maintainer Info
 
