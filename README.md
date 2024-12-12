@@ -166,6 +166,31 @@ $ iadmin mkuser anonymous rodsuser
 
 Make sure to also set `DAVRODS_ENABLE_TICKETS=1` in your environment.
 
+## Upgrade Guide
+
+### v1.0.0-1
+
+SODAR v1.0 contains breaking changes regarding upgrades to iRODS 4.3 and PostgreSQL >12. When upgrading from a previous version, it is recommended to do so as a clean install. See detailed instructions for the upgrade below and follow them to avoid loss of data.
+
+1. Pull the latest release of this repository.
+2. Export and backup your `sodar` and `ICAT` databases.
+    * Example: `pg_dump -cv DATABASE-NAME > /tmp/DATABASE-NAME_yyyy-mm-dd.sql`
+    * Make sure you store the backups outside your Docker environment.
+    * **OPTIONAL:** If you have made changes to iRODS config not present in the repository set up, e.g. changing the iRODS rule files, also back up your iRODS config files at this point.
+    * **OPTIONAL:** If you run an evaluation environment with the iRODS vault stored in a local volume and accessed directly via ICAT, also consider backing up your vault directory.
+3. Delete the iRODS config directory and PostgreSQL volume.
+    * **WARNING:** This WILL result in loss of data, so make sure you have successfully backed up everything before proceeding!
+    * Example: `sudo rm -rf config/irods/etc/ volumes/postgres`
+4. Ensure your `.env` file is up to date, verify changes between the repository releases.
+5. Run `init.sh` to reinitialize directories.
+6. Bring up the Docker Compose network according to your configuration.
+    * If something fails in your SODAR or iRODS setup, repeat steps 3-6.
+7. Once SODAR and iRODS provisioning works as expected, bring down the Docker Compose network *except* for the `postgres` container.
+8. Replace the `sodar` and `ICAT` databases in `postgres` with your database exports.
+    * Example: `psql DATABASE-NAME < /tmp/DATABASE-NAME_yyyy-mm-dd.sql`
+9. Restart the entire Docker Compose network.
+    * `sodar-web` will migrate your SODAR database upon restart.
+    * `irods` should run without issues on the previously backed up database after it's been provisioned.
 
 ## Troubleshooting
 
