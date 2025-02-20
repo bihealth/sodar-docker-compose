@@ -2,16 +2,16 @@
 
 ## Unreleased
 
-- Suppress iRODS postgres transaction warnings (#17)
-- Upgrade to Postgres v16 (#34)
-- Upgrade to `irods-docker` v4.3.3-1 (#34)
-- Upgrade to `davrods-docker` v4.3.3_1.5.1-wip (#63)
+- Add SODAR v1.0 env vars (#59)
 - Add `run_dev_sssd.sh` script (#65)
 - Add `offline_credentials_expiration` to example SSSD config (#64)
-- Add SODAR v1.0 env vars (#59)
-- Mount LDAP TLS config as directory instead of single file (#49)
 - Add LDAP TLS instructions to README (#58)
 - Add `IRODS_PASSWORD_MIN_TIME` env var (#66, #70)
+- Update postgres to suppress iRODS transaction warnings (#17)
+- Update LDAP TLS config to be mounted as directory (#49)
+- Upgrade to Postgres v16 (#34)
+- Upgrade to `irods-docker` v4.3.3-2 (#34, #79)
+- Upgrade to `davrods-docker` v4.3.3_1.5.1-wip (#63)
 - Remove deprecated version strings (#67)
 - Remove `SODAR_ENABLE_SENTRY` from `env.example.dev` (#76)
 - Remove `IRODS_AUTHENTICATION_SCHEME` env var (#77)
