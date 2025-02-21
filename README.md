@@ -182,6 +182,7 @@ SODAR v1.0 contains breaking changes regarding upgrades to iRODS 4.3 and Postgre
     * **WARNING:** This WILL result in loss of data, so make sure you have successfully backed up everything before proceeding!
     * Example: `sudo rm -rf config/irods/etc/ volumes/postgres`
 4. Ensure your `.env` file is up to date, verify changes between the repository releases.
+    * Make sure `IRODS_PASS` and `IRODS_PASSWORD_SALT` are set with the same values as in your previous installation. Otherwise iRODS will fail to run after re-importing old databases.
 5. Run `init.sh` to reinitialize directories.
 6. Bring up the Docker Compose network according to your configuration.
     * If something fails in your SODAR or iRODS setup, repeat steps 3-6.
