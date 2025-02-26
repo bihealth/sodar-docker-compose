@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Add SODAR v1.0 env vars (#59)
+- Add SODAR v1.0 env vars (#59, #82)
 - Add `run_dev_sssd.sh` script (#65)
 - Add `offline_credentials_expiration` to example SSSD config (#64)
 - Add LDAP TLS instructions to README (#58)
