@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   sssd:
     image: ghcr.io/bihealth/sssd-docker:${SSSD_VERSION}
@@ -14,9 +12,9 @@ services:
       - type: volume
         source: sssd-sockets
         target: /var/lib/sss
-      - type: bind  # LDAP CA certificate
-        source: ./config/ldap/ldap_ca_cert.pem
-        target: /etc/ssl/certs/ldap_ca_cert.pem
+      - type: bind  # LDAP CA certificates
+        source: ./config/ldap
+        target: /etc/ssl/certs
   irods:
     image: ghcr.io/bihealth/irods-docker:${IRODS_VERSION}-sssd
     ports:
@@ -30,19 +28,24 @@ services:
       IRODS_ADMIN_USER: ${IRODS_USER}
       IRODS_ADMIN_PASS: ${IRODS_PASS}
       IRODS_ZONE_NAME: sodarZone
-      IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
       IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
       IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_POLICY}
       IRODS_ZONE_KEY: ${IRODS_ZONE_KEY}
       IRODS_NEGOTIATION_KEY: ${IRODS_NEGOTIATION_KEY}
       IRODS_PASSWORD_SALT: ${IRODS_PASSWORD_SALT}
       IRODS_CONTROL_PLANE_KEY: ${IRODS_CONTROL_PLANE_KEY}
-      IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
       IRODS_SSL_CERTIFICATE_CHAIN_FILE: ${IRODS_SSL_CERTIFICATE_CHAIN_FILE}
       IRODS_SSL_CERTIFICATE_KEY_FILE: ${IRODS_SSL_CERTIFICATE_KEY_FILE}
       IRODS_SSL_DH_PARAMS_FILE: ${IRODS_SSL_DH_PARAMS_FILE}
+      IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
+      IRODS_DEFAULT_HASH_SCHEME: MD5
+      IRODS_DEFAULT_RESOURCE_NAME: ${IRODS_DEFAULT_RESOURCE_NAME}
+      IRODS_SERVICE_ACCOUNT_UID: ${IRODS_SERVICE_ACCOUNT_UID}
+      IRODS_SERVICE_ACCOUNT_GID: ${IRODS_SERVICE_ACCOUNT_GID}
       IRODS_SSSD_AUTH: 1
       IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
+      IRODS_SODAR_API_HOST: ${IRODS_SODAR_API_HOST}
+      IRODS_PASSWORD_MIN_TIME: ${IRODS_PASSWORD_MIN_TIME}
     depends_on:
       - postgres
       - sssd
@@ -55,9 +58,9 @@ services:
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
-      - type: bind  # log files
+      - type: bind  # Log files
         source: ./volumes/irods/log
-        target: /var/lib/irods/iRODS/server/log
+        target: /var/log/irods
       - type: bind  # mass data files
         source: ./volumes/irods/vault
         target: /data/Vault

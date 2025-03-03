@@ -1,5 +1,4 @@
 # Production / evaluation configuration for SODAR
-version: "3.8"
 
 # Default configuration for SODAR
 x-sodar: &default-sodar
@@ -10,6 +9,8 @@ x-sodar: &default-sodar
     DJANGO_ALLOWED_HOSTS: "*"
     DJANGO_SECRET_KEY: ${SODAR_DJANGO_SECRET_KEY}
     DJANGO_SETTINGS_MODULE: config.settings.production
+    DJANGO_SESSION_COOKIE_AGE: ${SODAR_DJANGO_SESSION_COOKIE_AGE}
+    DJANGO_SESSION_EXPIRE_AT_BROWSER_CLOSE: ${SODAR_DJANGO_SESSION_EXPIRE_AT_BROWSER_CLOSE}
     CELERY_BROKER_URL: redis://redis:6379/0
     CELERY_CHDIR: /usr/src/app
     CELERY_CREATE_DIRS: "1"
@@ -27,6 +28,7 @@ x-sodar: &default-sodar
     EMAIL_SUBJECT_PREFIX: ${SODAR_EMAIL_SUBJECT_PREFIX}
     EMAIL_URL: ${SODAR_EMAIL_URL}
     SODAR_API_DEFAULT_HOST: ${SODAR_API_DEFAULT_HOST}
+    SODAR_API_PAGE_SIZE: ${SODAR_API_PAGE_SIZE}
     PROJECTROLES_EMAIL_HEADER: ${SODAR_PROJECTROLES_EMAIL_HEADER}
     PROJECTROLES_EMAIL_FOOTER: ${SODAR_PROJECTROLES_EMAIL_FOOTER}
     PROJECTROLES_DEFAULT_ADMIN: ${SODAR_PROJECTROLES_DEFAULT_ADMIN}
@@ -58,6 +60,11 @@ x-sodar: &default-sodar
     AUTH_LDAP2_CA_CERT_FILE: ${SODAR_AUTH_LDAP2_CA_CERT_FILE}
     AUTH_LDAP2_USER_FILTER: ${SODAR_AUTH_LDAP2_USER_FILTER}
     LDAP_ALT_DOMAINS: ${SODAR_LDAP_ALT_DOMAINS}
+    ENABLE_OIDC: ${SODAR_ENABLE_OIDC}
+    SOCIAL_AUTH_OIDC_OIDC_ENDPOINT: ${SODAR_SOCIAL_AUTH_OIDC_OIDC_ENDPOINT}
+    SOCIAL_AUTH_OIDC_KEY: ${SODAR_SOCIAL_AUTH_OIDC_KEY}
+    SOCIAL_AUTH_OIDC_SECRET: ${SODAR_SOCIAL_AUTH_OIDC_SECRET}
+    SOCIAL_AUTH_OIDC_USERNAME_KEY: ${SODAR_SOCIAL_AUTH_OIDC_USERNAME_KEY}
     ENABLE_IRODS: ${SODAR_ENABLE_IRODS}
     IRODS_HOST: ${IRODS_HOST}
     IRODS_HOST_FQDN: ${IRODS_HOST_FQDN}
@@ -78,6 +85,7 @@ x-sodar: &default-sodar
     BASICAUTH_REALM: ${SODAR_BASICAUTH_REALM}
     SHEETS_IGV_OMIT_BAM: ${SODAR_SHEETS_IGV_OMIT_BAM}
     SHEETS_IGV_OMIT_VCF: ${SODAR_SHEETS_IGV_OMIT_VCF}
+    SHEETS_API_FILE_EXISTS_RESTRICT: ${SODAR_SHEETS_API_FILE_EXISTS_RESTRICT}
     LANDINGZONES_DISABLE_FOR_USERS: ${SODAR_LANDINGZONES_DISABLE_FOR_USERS}
     ISATEMPLATES_ENABLE_CUBI_TEMPLATES: ${SODAR_ISATEMPLATES_ENABLE_CUBI_TEMPLATES}
     TASKFLOW_LOCK_RETRY_COUNT: ${TASKFLOW_LOCK_RETRY_COUNT}
@@ -117,12 +125,13 @@ services:
         read_only: true
 
   postgres:
-    image: postgres:11
+    image: postgres:16
     shm_size: 512mb
     environment:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: sodar
+    command: ["postgres", "-c", "log_min_messages=error"]
     networks:
       - sodar
     restart: unless-stopped
@@ -167,9 +176,9 @@ services:
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
-      - type: bind  # LDAP CA certificate
-        source: ./config/ldap/ldap_ca_cert.pem
-        target: /etc/ssl/certs/ldap_ca_cert.pem
+      - type: bind  # LDAP CA certificates
+        source: ./config/ldap
+        target: /etc/ssl/certs
 
   sodar-celerybeat:
     <<: *default-sodar

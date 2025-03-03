@@ -108,7 +108,7 @@ In the case of any error please report it to us via the Issue Tracker of this re
 To gain access to the SODAR web UI, you must first create a superuser account. The user name should be given as `admin`, otherwise you will need to edit the `.env` file. Open a new terminal tab, enter the following and follow the prompt:
 
 ```bash
-$ docker exec -it sodar-docker-compose_sodar-web_1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
+$ docker exec -it sodar-docker-compose-sodar-web-1 python /usr/src/app/manage.py createsuperuser --skip-checks --username admin
 ```
 
 ### 7. Use SODAR
@@ -142,21 +142,73 @@ Instructions in brief:
 6. Configure and run the required SODAR server components locally on your workstation
 
 
-## Troubleshooting
+## Optional Configuration
 
-Solutions for common problems with running the environment are detailed in this subsection.
+### LDAP TLS Certificates
+
+If an LDAP server used for authentication uses TLS and its CA is not public, you need to provide a CA certificate file.
+
+This can be done as follows:
+
+1. Copy the CA certificate file into `config/ldap/your-cert-file.pem`
+2. Set `SODAR_AUTH_LDAP*_CA_CERT_FILE` to `/etc/ssl/certs/your-cert-file.pem` (make sure to set the value for the correct LDAP server)
+3. Ensure you have also set `SODAR_AUTH_LDAP*_START_TLS=1` on the relevant LDAP server
+
+### iRODS Ticket URL Support
+
+For enabling anonymous ticket URLs for SODAR, create the `anonymous` user in iRODS with the following commands:
+
+```bash
+$ docker exec -it sodar-docker-compose-dev-43-fresh-irods-1 /bin/bash -i
+$ su - irods
+$ iadmin mkuser anonymous rodsuser
+```
+
+Make sure to also set `DAVRODS_ENABLE_TICKETS=1` in your environment.
+
+## Upgrade Guide
+
+### v1.0.0-1
+
+SODAR v1.0 contains breaking changes regarding upgrades to iRODS 4.3 and PostgreSQL >12. When upgrading from a previous version, it is recommended to do so as a clean install. See detailed instructions for the upgrade below and follow them to avoid loss of data.
+
+1. Pull the latest release of this repository.
+2. Export and backup your `sodar` and `ICAT` databases.
+    * Example: `pg_dump -cv DATABASE-NAME > /tmp/DATABASE-NAME_yyyy-mm-dd.sql`
+    * Make sure you store the backups outside your Docker environment.
+    * **OPTIONAL:** If you have made changes to iRODS config not present in the repository set up, e.g. changing the iRODS rule files, also back up your iRODS config files at this point.
+    * **OPTIONAL:** If you run an evaluation environment with the iRODS vault stored in a local volume and accessed directly via ICAT, also consider backing up your vault directory.
+3. Delete the iRODS config directory and PostgreSQL volume.
+    * **WARNING:** This WILL result in loss of data, so make sure you have successfully backed up everything before proceeding!
+    * Example: `sudo rm -rf config/irods/etc/ volumes/postgres`
+4. Ensure your `.env` file is up to date, verify changes between the repository releases.
+    * Make sure `IRODS_PASS` and `IRODS_PASSWORD_SALT` are set with the same values as in your previous installation. Otherwise iRODS will fail to run after re-importing old databases.
+5. Run `init.sh` to reinitialize directories.
+6. Bring up the Docker Compose network according to your configuration.
+    * If something fails in your SODAR or iRODS setup, repeat steps 3-6.
+7. Once SODAR and iRODS provisioning works as expected, bring down the Docker Compose network *except* for the `postgres` container.
+8. Replace the `sodar` and `ICAT` databases in `postgres` with your database exports.
+    * Example: `psql DATABASE-NAME < /tmp/DATABASE-NAME_yyyy-mm-dd.sql`
+9. Restart the entire Docker Compose network.
+    * `sodar-web` will migrate your SODAR database upon restart.
+    * `irods` should run without issues on the previously backed up database after it's been provisioned.
+
+## Troubleshooting
 
 ### Conflicts with Existing Database Servers
 
-If you are already running Postgres, Redis or iRODS on your workstation in their default ports, these servers will fail
-to run in the Docker Compose network. To fix this you should either:
+If run the network on your workstation and are already runing Postgres, Redis or iRODS in their default ports, these servers will fail to run in the Docker Compose network. To fix this you should either:
 
-- Temporarily shut down your existing server
-- Or, alter the forwarded ports and your environment file to connect to separate ports
-- Or, remove the servers from the Docker Compose network and use your existing development servers.
+- Temporarily shut down your existing server, or
+- Alter the forwarded ports and your environment file to connect to separate ports, or
+- Remove the servers from the Docker Compose network and use your existing development servers.
 
 **NOTE:** You should never use an existing iRODS server as the "test" iRODS server, as the server zone and users will get wiped out after each SODAR test!
 
+### SSSD Timeouts with an AD Server
+
+If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
+the login process considerably.
 
 ## Maintainer Info
 

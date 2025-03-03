@@ -1,5 +1,4 @@
 # docker-compose.override.yaml fragment for running davrods from docker-compose
-version: "3.8"
 
 services:
   davrods:
@@ -10,12 +9,13 @@ services:
       IRODS_ZONE_PORT: 1247
       IRODS_ZONE_NAME: sodarZone
       IRODS_SSL_VERIFY_SERVER: ${IRODS_SSL_VERIFY_SERVER}
-      IRODS_AUTHENTICATION_SCHEME: ${IRODS_AUTHENTICATION_SCHEME}
       IRODS_CLIENT_SERVER_NEGOTIATION: ${IRODS_CLIENT_SERVER_NEGOTIATION}
       IRODS_CLIENT_SERVER_POLICY: ${IRODS_CLIENT_SERVER_POLICY}
       IRODS_SSL_CA_CERT_PATH: ${IRODS_CERT_PATH}
       DAVRODS_ENABLE_TICKETS: ${DAVRODS_ENABLE_TICKETS}
       DAVRODS_AUTH_NAME: ${DAVRODS_AUTH_NAME}
+      DAVRODS_AUTH_SCHEME: ${DAVRODS_AUTH_SCHEME}  # NOTE: for iRODS 4.3 this differs from iRODS auth scheme
+      DAVRODS_LOG_LEVEL: ${DAVRODS_LOG_LEVEL}
     depends_on:
       - irods
     networks:
@@ -25,7 +25,7 @@ services:
     volumes:
       - type: bind
         source: ./config/davrods/theme
-        target: /etc/httpd/irods/theme
+        target: /etc/apache2/irods/theme
       - type: bind  # Traefik configuration for shared certs
         source: ./config/traefik/tls
         target: /etc/traefik/tls
