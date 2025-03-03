@@ -11,7 +11,7 @@
 - Update LDAP TLS config to be mounted as directory (#49)
 - Upgrade to Postgres v16 (#34)
 - Upgrade to `irods-docker` v4.3.3-2 (#34, #79)
-- Upgrade to `davrods-docker` v4.3.3_1.5.1-wip (#63)
+- Upgrade to `davrods-docker` v4.3.3_1.5.1-1 (#63)
 - Remove deprecated version strings (#67)
 - Remove `SODAR_ENABLE_SENTRY` from `env.example.dev` (#76)
 - Remove `IRODS_AUTHENTICATION_SCHEME` env var (#77)
