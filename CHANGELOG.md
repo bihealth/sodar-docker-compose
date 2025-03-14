@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add SODAR v1.1 env vars (#86)
+
+
+## v1.0.0-1 (2025-03-03)
+
 - Add SODAR v1.0 env vars (#59, #82)
 - Add `run_dev_sssd.sh` script (#65)
 - Add `offline_credentials_expiration` to example SSSD config (#64)
