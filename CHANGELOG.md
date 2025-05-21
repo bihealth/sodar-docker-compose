@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add SODAR v1.1 env vars (#86)
+- Add `IRODS_HASH_SCHEME` env var (#88)
 
 
 ## v1.0.0-1 (2025-03-03)
