@@ -1,6 +1,6 @@
 # SODAR Docker Compose Changelog
 
-## Unreleased
+## v1.1-1 (2025-05-23)
 
 - Add SODAR v1.1 env vars (#86)
 - Add `IRODS_HASH_SCHEME` env var (#88)
