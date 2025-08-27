@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Update LANDINGZONES_ZONE_VALIDATE_LIMIT documentation (#90)
+- Add Celery env vars (#92)
+- Update ``SODAR_LANDINGZONES_ZONE_VALIDATE_LIMIT`` documentation (#90)
 
 
 ## v1.1-1 (2025-05-23)
