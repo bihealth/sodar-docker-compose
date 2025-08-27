@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add note on iCommands v5.0 PAM auth issue (#91)
 - Add Celery env vars (#92)
 - Update ``SODAR_LANDINGZONES_ZONE_VALIDATE_LIMIT`` documentation (#90)
 
