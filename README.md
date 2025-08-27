@@ -210,6 +210,12 @@ If run the network on your workstation and are already runing Postgres, Redis or
 If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
 the login process considerably.
 
+### iRODS PAM Auth Fails in Development with Self-Signed Cert
+
+Starting in iCommands v5.0, iRODS PAM authentication does not work in a dev environment using a self-signed certificate. [This is a known issue](https://github.com/bihealth/sodar-docker-compose/issues/91).
+
+There are plans to introduce an "insecure mode" in iRODS v5.1. Currently, the workaround is to pin your iCommands dependencies to 4.3. This can be done e.g. by uninstalling the iRODS v5.0 packages, replacing them with v4.3 releases and then running `sudo apt-mark hold irods-runtime irods-icommands`.
+
 ## Maintainer Info
 
 This section section is only interesting for maintainers of `sodar-docker-compose`.
