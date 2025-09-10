@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Upgrade to `irods-docker` v4.3.4-1 (#95)
+- Upgrade to `davrods-docker` v4.3.4_1.5.2-1 (#96)
 
 ## v1.1-2 (2025-08-27)
 
