@@ -1,5 +1,9 @@
 # SODAR Docker Compose Changelog
 
+## Unreleased
+
+- Upgrade to `irods-docker` v4.3.4-1 (#95)
+
 ## v1.1-2 (2025-08-27)
 
 - Add note on iCommands v5.0 PAM auth issue (#91)
