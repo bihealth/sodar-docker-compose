@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Update env vars for SODAR v1.2 (#94)
 - Upgrade to `irods-docker` v4.3.4-1 (#95)
 - Upgrade to `davrods-docker` v4.3.4_1.5.2-1 (#96)
 - Upgrade to Redis v8.x (#97)
