@@ -155,7 +155,7 @@ services:
         target: /var/lib/postgresql/data
 
   redis:
-    image: redis:6
+    image: redis:8
     networks:
       - sodar
     restart: unless-stopped
