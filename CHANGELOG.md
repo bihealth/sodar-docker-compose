@@ -1,6 +1,6 @@
 # SODAR Docker Compose Changelog
 
-## Unreleased
+## v1.2-1 (2025-10-22)
 
 - Update env vars for SODAR v1.2 (#94)
 - Upgrade to `irods-docker` v4.3.4-1 (#95)
