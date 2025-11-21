@@ -116,7 +116,7 @@ x-sodar: &default-sodar
 
 services:
   traefik:
-    image: traefik:v2.3.1
+    image: traefik:v2.11
     ports:
       - "80:80"
       - "443:443"
