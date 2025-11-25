@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Update Sentry and GlitchTip env vars (#102)
 - Upgrade to traefik v2.11 (#100)
 
 ## v1.2-1 (2025-10-22)
