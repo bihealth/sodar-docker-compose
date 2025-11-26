@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add postgres max connection and caching env vars (#87)
 - Update Sentry and GlitchTip env vars (#102)
 - Upgrade to traefik v2.11 (#100)
 
