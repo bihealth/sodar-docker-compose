@@ -1,10 +1,16 @@
 # SODAR Docker Compose Changelog
 
+## v1.2-2 (2025-11-26)
+
+- Add postgres max connection and caching env vars (#87)
+- Update Sentry and GlitchTip env vars (#102)
+- Upgrade to traefik v2.11 (#100)
+
 ## v1.2-1 (2025-10-22)
 
 - Update env vars for SODAR v1.2 (#94)
-- Upgrade to `irods-docker` v4.3.4-1 (#95)
-- Upgrade to `davrods-docker` v4.3.4_1.5.2-1 (#96)
+- Upgrade to irods-docker v4.3.4-1 (#95)
+- Upgrade to davrods-docker v4.3.4_1.5.2-1 (#96)
 - Upgrade to Redis v8.x (#97)
 
 ## v1.1-2 (2025-08-27)
@@ -28,8 +34,8 @@
 - Update postgres to suppress iRODS transaction warnings (#17)
 - Update LDAP TLS config to be mounted as directory (#49)
 - Upgrade to Postgres v16 (#34)
-- Upgrade to `irods-docker` v4.3.3-2 (#34, #79)
-- Upgrade to `davrods-docker` v4.3.3_1.5.1-1 (#63)
+- Upgrade to irods-docker v4.3.3-2 (#34, #79)
+- Upgrade to davrods-docker v4.3.3_1.5.1-1 (#63)
 - Remove deprecated version strings (#67)
 - Remove `SODAR_ENABLE_SENTRY` from `env.example.dev` (#76)
 - Remove `IRODS_AUTHENTICATION_SCHEME` env var (#77)

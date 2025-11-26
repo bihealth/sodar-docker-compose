@@ -109,6 +109,8 @@ x-sodar: &default-sodar
     TOKENS_CREATE_PROJECT_USER_RESTRICT: ${SODAR_TOKENS_CREATE_PROJECT_USER_RESTRICT}
     ENABLE_SENTRY: ${SODAR_ENABLE_SENTRY}
     SENTRY_DSN: ${SODAR_SENTRY_DSN}
+    SENTRY_TRACES_SAMPLE_RATE: ${SODAR_SENTRY_TRACES_SAMPLE_RATE}
+    SENTRY_ENVIRONMENT: ${SODAR_SENTRY_ENVIRONMENT}
 
   networks:
     - sodar
@@ -116,7 +118,7 @@ x-sodar: &default-sodar
 
 services:
   traefik:
-    image: traefik:v2.3.1
+    image: traefik:v2.11
     ports:
       - "80:80"
       - "443:443"
@@ -147,7 +149,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: sodar
-    command: ["postgres", "-c", "log_min_messages=error"]
+    command: >
+      postgres
+      -c log_min_messages=error
+      -c max_connections=${POSTGRES_MAX_CONNECTIONS}
+      -c shared_buffers=${POSTGRES_SHARED_BUFFERS}
     networks:
       - sodar
     restart: unless-stopped
