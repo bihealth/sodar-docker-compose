@@ -1,6 +1,6 @@
 # SODAR Docker Compose Changelog
 
-## Unreleased
+## v1.2-2 (2025-11-26)
 
 - Add postgres max connection and caching env vars (#87)
 - Update Sentry and GlitchTip env vars (#102)
