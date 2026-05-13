@@ -1,5 +1,9 @@
 # SODAR Docker Compose Changelog
 
+## Unreleased
+
+- Update `PROJECTROLES_CUSTOM_JS_INCLUDES` for JQuery v3.7.1 (#110)
+
 ## v1.2-2 (2025-11-26)
 
 - Add postgres max connection and caching env vars (#87)

@@ -41,7 +41,7 @@ x-sodar: &default-sodar
     PROJECTROLES_READ_ONLY_MSG: ${SODAR_PROJECTROLES_READ_ONLY_MSG}
     PROJECTROLES_SUPPORT_CONTACT: ${SODAR_PROJECTROLES_SUPPORT_CONTACT}
     PROJECTROLES_DISABLE_CDN_INCLUDES: "1"
-    PROJECTROLES_CUSTOM_JS_INCLUDES: /static/local/js/jquery-3.5.1.min.js,/static/local/js/bootstrap.bundle.min.js,/static/local/js/tether.js,/static/local/js/shepherd.min.js,/static/local/js/clipboard.min.js
+    PROJECTROLES_CUSTOM_JS_INCLUDES: /static/local/js/jquery-3.7.1.min.js,/static/local/js/bootstrap.bundle.min.js,/static/local/js/tether.js,/static/local/js/shepherd.min.js,/static/local/js/clipboard.min.js
     PROJECTROLES_CUSTOM_CSS_INCLUDES: /static/local/css/bootstrap.min.css
     PROJECTROLES_ROLE_PAGINATION: ${SODAR_PROJECTROLES_ROLE_PAGINATION}
     CUSTOM_STATIC_DIR: /usr/src/app/local-static
