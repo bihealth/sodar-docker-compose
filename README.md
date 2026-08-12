@@ -154,12 +154,12 @@ This can be done as follows:
 2. Set `SODAR_AUTH_LDAP*_CA_CERT_FILE` to `/etc/ssl/certs/your-cert-file.pem` (make sure to set the value for the correct LDAP server)
 3. Ensure you have also set `SODAR_AUTH_LDAP*_START_TLS=1` on the relevant LDAP server
 
-### iRODS Ticket URL Support
+### iRODS Ticket Support
 
 For enabling anonymous ticket URLs for SODAR, create the `anonymous` user in iRODS with the following commands:
 
 ```bash
-$ docker exec -it sodar-docker-compose-dev-43-fresh-irods-1 /bin/bash -i
+$ docker exec -it irods /bin/bash -i
 $ su - irods
 $ iadmin mkuser anonymous rodsuser
 ```
