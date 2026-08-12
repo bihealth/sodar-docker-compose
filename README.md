@@ -210,6 +210,12 @@ If run the network on your workstation and are already runing Postgres, Redis or
 If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
 the login process considerably.
 
+### Redis Memory Overcommit Warning
+
+When running Redis, you may receive a warning containing *"Memory overcommit must be enabled"*.
+
+This needs to be handled on the host running your Docker Compose network. This is done by setting `vm.overcommit_memory = 1` in `/etc/sysctl.conf`. See the Redis warning message for further information.
+
 ### iRODS PAM Auth Fails in Development with Self-Signed Cert
 
 Starting in iCommands v5.0, iRODS PAM authentication does not work in a dev environment using a self-signed certificate. [This is a known issue](https://github.com/bihealth/sodar-docker-compose/issues/91).
