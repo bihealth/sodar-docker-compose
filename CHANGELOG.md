@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Update `PROJECTROLES_CUSTOM_JS_INCLUDES` for JQuery v3.7.1 (#110)
+- Update env vars for SODAR v1.3 (#110)
 - Upgrade to irods-docker v4.3.5-1 (#111)
 - Upgrade to davrods-docker v4.3.5_1.5.2-1 (#111)
 
