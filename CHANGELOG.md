@@ -9,6 +9,7 @@
 - Upgrade to davrods-docker v4.3.5_1.5.2-1 (#111)
 - Fix iRODS ticket support example (#112)
 - Cleanup `.gitignore` (#106)
+- Upgrade Traefik to v3.7 (#101)
 
 ## v1.2-2 (2025-11-26)
 
