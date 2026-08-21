@@ -154,12 +154,12 @@ This can be done as follows:
 2. Set `SODAR_AUTH_LDAP*_CA_CERT_FILE` to `/etc/ssl/certs/your-cert-file.pem` (make sure to set the value for the correct LDAP server)
 3. Ensure you have also set `SODAR_AUTH_LDAP*_START_TLS=1` on the relevant LDAP server
 
-### iRODS Ticket URL Support
+### iRODS Ticket Support
 
 For enabling anonymous ticket URLs for SODAR, create the `anonymous` user in iRODS with the following commands:
 
 ```bash
-$ docker exec -it sodar-docker-compose-dev-43-fresh-irods-1 /bin/bash -i
+$ docker exec -it irods /bin/bash -i
 $ su - irods
 $ iadmin mkuser anonymous rodsuser
 ```
@@ -209,6 +209,12 @@ If run the network on your workstation and are already runing Postgres, Redis or
 
 If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
 the login process considerably.
+
+### Redis Memory Overcommit Warning
+
+When running Redis, you may receive a warning containing *"Memory overcommit must be enabled"*.
+
+This needs to be handled on the host running your Docker Compose network. This is done by setting `vm.overcommit_memory = 1` in `/etc/sysctl.conf`. See the Redis warning message for further information.
 
 ### iRODS PAM Auth Fails in Development with Self-Signed Cert
 

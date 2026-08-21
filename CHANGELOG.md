@@ -1,5 +1,16 @@
 # SODAR Docker Compose Changelog
 
+## v1.3-1 (2026-08-21)
+
+- Add Redis memory overcommit troubleshooting docs (#105)
+- Update env vars for SODAR v1.3 and irods-docker v4.3.5-2 (#110, #115)
+- Upgrade to sodar-server v1.3.0-0 (#116)
+- Upgrade to irods-docker v4.3.5-2 (#111, #115)
+- Upgrade to davrods-docker v4.3.5_1.5.2-1 (#111)
+- Upgrade to traefik v3.7 (#101)
+- Fix iRODS ticket support example (#112)
+- Cleanup `.gitignore` (#106)
+
 ## v1.2-2 (2025-11-26)
 
 - Add postgres max connection and caching env vars (#87)

@@ -37,11 +37,12 @@ x-sodar: &default-sodar
     PROJECTROLES_DEFAULT_ADMIN: ${SODAR_PROJECTROLES_DEFAULT_ADMIN}
     PROJECTROLES_ALLOW_LOCAL_USERS: ${SODAR_PROJECTROLES_ALLOW_LOCAL_USERS}
     PROJECTROLES_ALLOW_ANONYMOUS: ${SODAR_PROJECTROLES_ALLOW_ANONYMOUS}
+    PROJECTROLES_LOCAL_USER_UPDATE: ${SODAR_PROJECTROLES_LOCAL_USER_UPDATE}
     PROJECTROLES_API_USER_DETAIL_RESTRICT: ${SODAR_PROJECTROLES_API_USER_DETAIL_RESTRICT}
     PROJECTROLES_READ_ONLY_MSG: ${SODAR_PROJECTROLES_READ_ONLY_MSG}
     PROJECTROLES_SUPPORT_CONTACT: ${SODAR_PROJECTROLES_SUPPORT_CONTACT}
     PROJECTROLES_DISABLE_CDN_INCLUDES: "1"
-    PROJECTROLES_CUSTOM_JS_INCLUDES: /static/local/js/jquery-3.5.1.min.js,/static/local/js/bootstrap.bundle.min.js,/static/local/js/tether.js,/static/local/js/shepherd.min.js,/static/local/js/clipboard.min.js
+    PROJECTROLES_CUSTOM_JS_INCLUDES: /static/local/js/jquery-3.7.1.min.js,/static/local/js/bootstrap.bundle.min.js,/static/local/js/tether.js,/static/local/js/shepherd.min.js,/static/local/js/clipboard.min.js
     PROJECTROLES_CUSTOM_CSS_INCLUDES: /static/local/css/bootstrap.min.css
     PROJECTROLES_ROLE_PAGINATION: ${SODAR_PROJECTROLES_ROLE_PAGINATION}
     CUSTOM_STATIC_DIR: /usr/src/app/local-static
@@ -89,6 +90,7 @@ x-sodar: &default-sodar
     IRODS_WEBDAV_USER_ANON: ${SODAR_IRODS_WEBDAV_USER_ANON}
     IRODS_WEBDAV_IGV_PROXY: ${SODAR_IRODS_WEBDAV_IGV_PROXY}
     IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
+    IRODS_LOG_LEVEL: ${IRODS_LOG_LEVEL}
     BASICAUTH_REALM: ${SODAR_BASICAUTH_REALM}
     SHEETS_IGV_OMIT_BAM: ${SODAR_SHEETS_IGV_OMIT_BAM}
     SHEETS_IGV_OMIT_VCF: ${SODAR_SHEETS_IGV_OMIT_VCF}
@@ -107,6 +109,14 @@ x-sodar: &default-sodar
     TASKFLOW_IRODS_CONN_TIMEOUT: ${TASKFLOW_IRODS_CONN_TIMEOUT}
     TASKFLOW_ZONE_PROGRESS_INTERVAL: ${TASKFLOW_ZONE_PROGRESS_INTERVAL}
     TOKENS_CREATE_PROJECT_USER_RESTRICT: ${SODAR_TOKENS_CREATE_PROJECT_USER_RESTRICT}
+    ADMINALERTS_EMAIL_SENDING_DEFAULT: ${SODAR_ADMINALERTS_EMAIL_SENDING_DEFAULT}
+    AXES_ENABLED: ${SODAR_AXES_ENABLED}
+    AXES_FAILURE_LIMIT: ${SODAR_AXES_FAILURE_LIMIT}
+    AXES_LOCK_OUT_AT_FAILURE: ${SODAR_AXES_LOCK_OUT_AT_FAILURE}
+    AXES_COOLOFF_TIME: ${SODAR_AXES_COOLOFF_TIME}
+    AXES_LOCKOUT_PARAMETERS: ${SODAR_AXES_LOCKOUT_PARAMETERS}
+    AXES_ONLY_ADMIN_SITE: ${SODAR_AXES_ONLY_ADMIN_SITE}
+    AXES_DISABLE_CLIENT_IP_STORAGE: ${SODAR_AXES_DISABLE_CLIENT_IP_STORAGE}
     ENABLE_SENTRY: ${SODAR_ENABLE_SENTRY}
     SENTRY_DSN: ${SODAR_SENTRY_DSN}
     SENTRY_TRACES_SAMPLE_RATE: ${SODAR_SENTRY_TRACES_SAMPLE_RATE}
@@ -118,7 +128,7 @@ x-sodar: &default-sodar
 
 services:
   traefik:
-    image: traefik:v2.11
+    image: traefik:v3.7
     ports:
       - "80:80"
       - "443:443"
@@ -185,7 +195,7 @@ services:
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.sodar-web.entrypoints=websecure"
       - "traefik.http.routers.sodar-web.middlewares=xforward"
-      - "traefik.http.routers.sodar-web.rule=HostRegexp(`{catchall:.+}`)"
+      - "traefik.http.routers.sodar-web.rule=HostRegexp(`.+`)"
       - "traefik.http.services.sodar-web.loadbalancer.server.port=8080"
       - "traefik.http.routers.sodar-web.tls=true"
     volumes:
