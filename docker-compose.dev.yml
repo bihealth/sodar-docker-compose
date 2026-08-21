@@ -25,6 +25,7 @@ x-irods: &default-irods
     IRODS_SODAR_AUTH: ${IRODS_SODAR_AUTH}
     IRODS_SODAR_API_HOST: ${IRODS_SODAR_API_HOST}
     IRODS_PASSWORD_MIN_TIME: ${IRODS_PASSWORD_MIN_TIME}
+    IRODS_LOG_LEVEL: ${IRODS_LOG_LEVEL}
   depends_on:
     - postgres
   restart: unless-stopped

@@ -3,8 +3,9 @@
 ## Unreleased
 
 - Add Redis memory overcommit troubleshooting documentation (#105)
-- Update env vars for SODAR v1.3 (#110)
-- Upgrade to irods-docker v4.3.5-1 (#111)
+- Update env vars for SODAR v1.3 and irods-docker v4.3.5-2 (#110, #115)
+- Upgrade to sodar-server v1.3.0-0 (#116)
+- Upgrade to irods-docker v4.3.5-2 (#111, #115)
 - Upgrade to davrods-docker v4.3.5_1.5.2-1 (#111)
 - Fix iRODS ticket support example (#112)
 - Cleanup `.gitignore` (#106)
