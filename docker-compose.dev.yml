@@ -33,7 +33,7 @@ x-irods: &default-irods
 
 services:
   traefik:
-    image: traefik:v2.11
+    image: traefik:v3.7
     ports:
       - "80:80"
       - "443:443"
@@ -172,7 +172,7 @@ services:
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.davrods.entrypoints=websecure"
       - "traefik.http.routers.davrods.middlewares=xforward"
-      - "traefik.http.routers.davrods.rule=(HostRegexp(`{catchall:.+}`) && PathPrefix(`/sodarZone`))"
+      - "traefik.http.routers.davrods.rule=(HostRegexp(`.+`) && PathPrefix(`/sodarZone`))"
       - "traefik.http.services.davrods.loadbalancer.server.port=80"
       - "traefik.http.routers.davrods.tls=true"
       - "traefik.http.routers.davrods.priority=100"
