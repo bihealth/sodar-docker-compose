@@ -63,6 +63,8 @@ $ ls volumes/
 irods  postgres  redis  sodar   traefik
 ```
 
+You might need to change the user id in `init.sh` if you are running this on a multi-user system.
+
 Next, copy the example environment file `env.example` to `.env`.
 
 ```bash
