@@ -17,10 +17,11 @@ ldap_uri = ldap://ldap.example.com
 #
 # Add if you need it:
 #
-#ldap_id_use_start_tls = True
+#ldap_id_use_start_tls = true
 ldap_search_base = DC=example,DC=com
 ldap_default_bind_dn = CN=ldap-bind,OU=Users,DC=example,DC=com
 ldap_default_authtok = ldap-bind-password
+ldap_default_authtok_type = password
 
 # See configuration of SSSD on how to setup.
 access_provider = ldap
@@ -39,3 +40,5 @@ ldap_user_fullname = displayName
 ldap_id_mapping = True
 ldap_user_objectsid = objectSid
 debug_level = 1
+# Setting ignore_group_members to true can make some queries significantly faster
+ignore_group_members = true
