@@ -210,6 +210,10 @@ If run the network on your workstation and are already runing Postgres, Redis or
 If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
 the login process considerably.
 
+### SSSD cannot access its configuration file
+
+If you see the error `chown: cannot access '/etc/sssd/sssd.conf': No such file or directory`, it is likely because SSSD was upgraded to a new version where the path of the configuration file changed from `/etc/sssd.in/sssd.conf` to `/etc/sssd/sssd.conf`. Thus, make sure that the Docker compose service for SSSD mounts the file to `/etc/sssd/sssd.conf`.
+
 ### Redis Memory Overcommit Warning
 
 When running Redis, you may receive a warning containing *"Memory overcommit must be enabled"*.

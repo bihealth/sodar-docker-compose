@@ -7,7 +7,7 @@ services:
     volumes:
       - type: bind  # SSSD config, copied to /etc/sssd
         source: ./config/sssd/sssd.conf
-        target: /etc/sssd.in/sssd.conf
+        target: /etc/sssd/sssd.conf
         read_only: true
       - type: volume
         source: sssd-sockets
