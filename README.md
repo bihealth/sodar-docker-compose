@@ -166,7 +166,22 @@ $ iadmin mkuser anonymous rodsuser
 
 Make sure to also set `DAVRODS_ENABLE_TICKETS=1` in your environment.
 
-## Upgrade Guide
+
+## Migration Guide
+
+### v1.3-2
+
+When upgrading to  `irods-docker` v4.3.5-3 or above, it is recommended to set `IRODS_PURGE_SYSTEMD_TIMESYNCD=1` in your environment.
+
+When upgrading to `sssd-docker` v2.8+ on an existing environment, you may encounter a database mismatch error. In this case, you need to run `rm /var/lib/sss/db/*` within the `irods` container.
+
+### v1.3-1
+
+When upgrading to `traefik v3.x`, you will need to change host `HostRegexp` syntax from `{catchall:.+}` to `.+`. Example:
+
+```yml
+- "traefik.http.routers.sodar-web.rule=HostRegexp(`.+`)"
+```
 
 ### v1.0.0-1
 
@@ -193,6 +208,7 @@ SODAR v1.0 contains breaking changes regarding upgrades to iRODS 4.3 and Postgre
     * `sodar-web` will migrate your SODAR database upon restart.
     * `irods` should run without issues on the previously backed up database after it's been provisioned.
 
+
 ## Troubleshooting
 
 ### Conflicts with Existing Database Servers
@@ -210,9 +226,18 @@ If run the network on your workstation and are already runing Postgres, Redis or
 If you encounter slow logins or timeouts with SSSD connecting to an AD server, try setting `ldap_referrals = false` in your `sssd.conf` file under the affected domain. As long as referrals are not actually required on the server, this should speed up
 the login process considerably.
 
-### SSSD cannot access its configuration file
+### SSSD Configuration File Access Error
 
 If you see the error `chown: cannot access '/etc/sssd/sssd.conf': No such file or directory`, it is likely because SSSD was upgraded to a new version where the path of the configuration file changed from `/etc/sssd.in/sssd.conf` to `/etc/sssd/sssd.conf`. Thus, make sure that the Docker compose service for SSSD mounts the file to `/etc/sssd/sssd.conf`.
+
+### SSSD Database Mismatch
+
+If you encounter a databse mismatch error on SSSD startup, you should ssh into your `irods` container and clear the existing database. Example:
+
+```bash
+$ docker compose exec -it irods bash
+$ rm /var/lib/sss/db/*
+```
 
 ### Redis Memory Overcommit Warning
 
@@ -225,6 +250,7 @@ This needs to be handled on the host running your Docker Compose network. This i
 Starting in iCommands v5.0, iRODS PAM authentication does not work in a dev environment using a self-signed certificate. [This is a known issue](https://github.com/bihealth/sodar-docker-compose/issues/91).
 
 There are plans to introduce an "insecure mode" in iRODS v5.1. Currently, the workaround is to pin your iCommands dependencies to 4.3. This can be done e.g. by uninstalling the iRODS v5.0 packages, replacing them with v4.3 releases and then running `sudo apt-mark hold irods-runtime irods-icommands`.
+
 
 ## Maintainer Info
 

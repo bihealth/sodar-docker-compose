@@ -1,5 +1,11 @@
 # SODAR Docker Compose Changelog
 
+## Unreleased
+
+- Add traefik v3 migration docs (#120)
+- Upgrade to irods-docker v4.3.5-3 (#121)
+- Upgrade to sssd-docker v2.8-1 (#122, #126, #128)
+
 ## v1.3-1 (2026-08-21)
 
 - Add Redis memory overcommit troubleshooting docs (#105)
