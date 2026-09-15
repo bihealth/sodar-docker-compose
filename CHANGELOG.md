@@ -1,6 +1,6 @@
 # SODAR Docker Compose Changelog
 
-## Unreleased
+## v1.3-2 (2026-09-15)
 
 - Add traefik v3 migration docs (#120)
 - Upgrade to irods-docker v4.3.5-3 (#121)
