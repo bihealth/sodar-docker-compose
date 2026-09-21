@@ -1,0 +1,31 @@
+# docker-compose.override.yaml fragment for running mango from docker-compose
+
+services:
+  tika:
+    image: apache/tika:3.3.1.0
+    networks:
+      - sodar
+    restart: unless-stopped
+
+  mango:
+    image: ghcr.io/bihealth/mango-sodar:v0.29.0-0
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - irods
+      - tika
+    volumes:
+      - type: bind  # Traefik configuration for shared certs
+        source: ./server.crt
+        target: /etc/traefik/tls/server.crt
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.routers.mango.entrypoints=websecure"
+      - "traefik.http.routers.mango.middlewares=xforward"
+      - "traefik.http.routers.mango.rule=HostRegexp(`.+`)"
+      - "traefik.http.services.mango.loadbalancer.server.port=80"
+      - "traefik.http.routers.mango.tls=true"
+      - "traefik.http.routers.mango.priority=100"
