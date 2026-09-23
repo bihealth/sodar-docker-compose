@@ -8,11 +8,16 @@ services:
     restart: unless-stopped
 
   mango:
-    image: ghcr.io/bihealth/mango-sodar:v0.29.0-0
+    image: ghcr.io/bihealth/mango-sodar:${MANGO_VERSION}
     ports:
       - 3000:3000
     restart: unless-stopped
-    network_mode: host
+    networks:
+      - sodar
+    environment:
+      IRODS_HOST: ${IRODS_HOST}
+      SECRET_KEY: ${MANGO_SECRET_KEY}
+      TIKA_URL: "http://tika:9998"
     depends_on:
       - irods
       - tika
