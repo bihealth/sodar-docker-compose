@@ -31,6 +31,7 @@ account_cache_expiration = 7
 entry_cache_timeout = 14400
 id_provider = ldap
 use_fully_qualified_names = True
+fallback_homedir = /home/%u
 ldap_access_filter = objectClass=person
 ldap_tls_reqcert = allow
 ldap_schema = ad
