@@ -15,22 +15,28 @@ services:
     networks:
       - sodar
     environment:
-      IRODS_HOST: ${IRODS_HOST}
-      SECRET_KEY: ${MANGO_SECRET_KEY}
+      IRODS_HOST: "${IRODS_HOST}"
+      IRODS_PORT: "${IRODS_PORT}"
+      IRODS_USER: "${IRODS_USER}"
+      IRODS_PASS: "${IRODS_PASS}"
+      IRODS_ZONES_CONFIG: "${MANGO_IRODS_ZONES_CONFIG}"
+      MANGO_GET_ZONE_OPERATOR_SESSION_FUNCTION: "${MANGO_GET_ZONE_OPERATOR_SESSION_FUNCTION}"
+      MANGO_URL_PREFIX: "${MANGO_URL_PREFIX}"
+      SECRET_KEY: "${MANGO_SECRET_KEY}"
       TIKA_URL: "http://tika:9998"
     depends_on:
       - irods
       - tika
     volumes:
       - type: bind  # Traefik configuration for shared certs
-        source: ./server.crt
+        source: ./config/traefik/tls/server.crt
         target: /etc/traefik/tls/server.crt
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.xforward.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.mango.entrypoints=websecure"
       - "traefik.http.routers.mango.middlewares=xforward"
-      - "traefik.http.routers.mango.rule=HostRegexp(`.+`)"
-      - "traefik.http.services.mango.loadbalancer.server.port=80"
+      - "traefik.http.routers.mango.rule=HostRegexp(`.+`) && PathPrefix(`${MANGO_URL_PREFIX}`)"
       - "traefik.http.routers.mango.tls=true"
       - "traefik.http.routers.mango.priority=100"
+      - "traefik.http.services.mango.loadbalancer.server.port=3000"
