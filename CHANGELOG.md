@@ -1,5 +1,10 @@
 # SODAR Docker Compose Changelog
 
+## current
+
+- Integrate `mango` service into the dev and prod stacks (#123, #137, #140)
+- Add ManGO environment variables (#137)
+
 ## v1.3-2 (2026-09-15)
 
 - Add traefik v3 migration docs (#120)
